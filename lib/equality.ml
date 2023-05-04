@@ -1,18 +1,13 @@
 open Tree
 open Base
 
-(*Rethink this*)
-let rec is_dual t1 t2 =
-  match (t1, t2) with
-  | Prime (idg1, sub1), Prime (idg2, sub2) ->
-      Id_graph.is_dual idg1 idg2
-      && Caml.List.for_all2 is_dual sub1 sub2 (*very suboptimal and also bad*)
-  | Atom a, Atom b -> Graph.is_dual_atom a b
-  | Tensor sub1, Tensor sub2 -> Caml.List.for_all2 is_dual sub1 sub2
-  | Par sub1, Par sub2 -> Caml.List.for_all2 is_dual sub1 sub2
-  | _ -> false
+(*smarter ordering is necessary*)
 
-let simplify tree = Condense.tree_from_graph @@ tree_to_graph tree
+let order_trees_by_node_count tree_list =
+  List.sort tree_list ~compare:(fun t1 t2 ->
+      let l1 = Tree.count_nodes t1 in
+      let l2 = Tree.count_nodes t2 in
+      Int.compare l1 l2)
 
 let isomorphism_pairing idg1 sub1 idg2 sub2 =
   let isol = Id_graph.find_sub_iso idg1 idg2 in
@@ -32,13 +27,35 @@ let isomorphism_pairing idg1 sub1 idg2 sub2 =
              let original_sub = List.nth_exn sub1 i in
              (original_sub, corresponding_sub)))
 
-(*smarter ordering is necessary*)
+let simplify tree = Condense.tree_from_graph @@ tree_to_graph tree
 
-let order_trees_by_length tree_list =
-  List.sort tree_list ~compare:(fun t1 t2 ->
-      let l1 = Tree.length t1 in
-      let l2 = Tree.length t2 in
-      Int.compare l1 l2)
+(*Rethink this*)
+let rec is_dual t1 t2 =
+  match (simplify t1, simplify t2) with
+  (*simplify is necessary, since it removes a lot of edge cases where we have empty lists as subtrees*)
+  | None, None -> true
+  | Some _, None -> false
+  | None, Some _ -> false
+  | Some t1, Some t2 -> (
+      match (t1, t2) with
+      | Prime (idg1, sub1), Prime (idg2, sub2) -> (
+          match isomorphism_pairing idg1 sub1 idg2 sub2 with
+          | None -> false
+          | Some l -> List.for_all l ~f:(fun (x, y) -> is_dual x y))
+      | Atom a, Atom b -> Graph.is_dual_atom a b
+      | Tensor sub1, Tensor sub2 ->
+          if List.length sub1 <> List.length sub2 then false
+          else
+            let sub1 = order_trees_by_node_count sub1 in
+            let sub2 = order_trees_by_node_count sub2 in
+            Caml.List.for_all2 is_dual sub1 sub2
+      | Par sub1, Par sub2 ->
+          if List.length sub1 <> List.length sub2 then false
+          else
+            let sub1 = order_trees_by_node_count sub1 in
+            let sub2 = order_trees_by_node_count sub2 in
+            Caml.List.for_all2 is_dual sub1 sub2
+      | _ -> false)
 
 let equal_atom (a : Graph.atom) (b : Graph.atom) =
   equal_string a.label b.label && equal_bool a.pol b.pol
@@ -60,13 +77,13 @@ let rec equal_tree t1 t2 =
       | Tensor sub1, Tensor sub2 ->
           if List.length sub1 <> List.length sub2 then false
           else
-            let sub1 = order_trees_by_length sub1 in
-            let sub2 = order_trees_by_length sub2 in
+            let sub1 = order_trees_by_node_count sub1 in
+            let sub2 = order_trees_by_node_count sub2 in
             Caml.List.for_all2 equal_tree sub1 sub2 (*breaks for reordering*)
       | Par sub1, Par sub2 ->
           if List.length sub1 <> List.length sub2 then false
           else
-            let sub1 = order_trees_by_length sub1 in
-            let sub2 = order_trees_by_length sub2 in
+            let sub1 = order_trees_by_node_count sub1 in
+            let sub2 = order_trees_by_node_count sub2 in
             Caml.List.for_all2 equal_tree sub1 sub2
       | _ -> false)

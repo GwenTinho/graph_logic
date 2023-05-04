@@ -191,7 +191,9 @@ let to_step js_obj =
   match step_type with
   | "sw" ->
       Fingerprint.Switch_Par
-        (Rules.pick_first, Rules.pick_largest, Rules.pick_first_atom_or_first)
+        ( Rules.pick_largest,
+          Rules.pick_first_atom_or_first,
+          Rules.pick_first_atom_or_first )
   | "ai" -> Fingerprint.AI_down
   | "pp" -> Fingerprint.Prime_down
   | _ -> failwith "Tried to serialize malformed proof"

@@ -26,7 +26,6 @@ let vset38 = Set.of_list (module Node) [ v3; v8 ]
 let vset48 = Set.of_list (module Node) [ v4; v8 ]
 let scond13 = Condense.smallest_condensible graph vset13 |> Caml.Option.get
 let%test _ = Set.length scond13 = 4
-let () = Caml.print_int (Set.length scond13)
 let scond34 = Condense.smallest_condensible graph vset34 |> Caml.Option.get
 let%test _ = Set.length scond34 = 4
 let scond47 = Condense.smallest_condensible graph vset47 |> Caml.Option.get

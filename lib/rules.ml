@@ -1,14 +1,11 @@
 open Tree
 open Base
 
-let ( = ) = Poly.( = )
-
 (*Work on tree nodes*)
 
 (*Inference rules*)
 
 let is_atom tree = match tree with Atom _ -> true | _ -> false
-let is_prime tree = match tree with Prime _ -> true | _ -> false
 let find_dual_pair trees = Util.find_fitting_pair trees Equality.is_dual
 
 let find_atomic_dual_pair trees =
@@ -50,51 +47,59 @@ let rec atomic_identity_down (tree : tree) =
 type selector = tree list -> int
 
 (*IMPORTANT THIS ALSO APPLIES TO SMALLER PRIME GRAPHS and fully connected ones!!!*)
-let switch_par_generic (select_node_in_prime : selector)
-    (select_first_node : selector) (select_corresponding : selector) tree =
+let switch_par_generic (select_host_graph : selector)
+    (select_outer_graph : selector) (select_inner_node : selector) tree =
   match tree with
   | Par sub ->
-      let primes, corresponding = List.partition_tf sub ~f:is_prime in
-      if primes = [] then tree
+      let host_index = select_host_graph sub in
+      let outer_index = select_outer_graph sub in
+      if host_index = outer_index then tree
       else
-        let corr_index = select_corresponding corresponding in
-        let prime_index = select_first_node primes in
-        let prime = List.nth_exn primes prime_index in
-        let corr = List.nth_exn corresponding corr_index in
-        let prime_par_n =
-          match prime with
-          | Prime (idg, sub_graphs) ->
-              let chosen_node_index = select_node_in_prime sub_graphs in
-              let chosen = List.nth_exn sub_graphs chosen_node_index in
-              let chosen_par = Par [ chosen; corr ] in
-              let new_nodes =
-                List.mapi sub_graphs ~f:(fun i t ->
-                    if i = chosen_node_index then chosen_par else t)
+        let host = List.nth_exn sub host_index in
+        let outer = List.nth_exn sub outer_index in
+        let updated_host =
+          match host with
+          | Atom _ -> tree
+          | Par host_sub ->
+              let inner_index = select_inner_node host_sub in
+              let inner = List.nth_exn host_sub inner_index in
+              let new_host_sub =
+                List.filteri host_sub ~f:(fun i _ -> i <> inner_index)
               in
-              Prime (idg, new_nodes)
-          | _ -> tree
+              let combined = Par [ inner; outer ] in
+              let new_host_sub = combined :: new_host_sub in
+              Par new_host_sub
+          | Tensor host_sub ->
+              let inner_index = select_inner_node host_sub in
+              let inner = List.nth_exn host_sub inner_index in
+              let new_host_sub =
+                List.filteri host_sub ~f:(fun i _ -> i <> inner_index)
+              in
+              let combined = Par [ inner; outer ] in
+              let new_host_sub = combined :: new_host_sub in
+              Tensor new_host_sub
+          | Prime (idg, host_sub) ->
+              let inner_index = select_inner_node host_sub in
+              let inner = List.nth_exn host_sub inner_index in
+              let new_host_sub =
+                List.filteri host_sub ~f:(fun i _ -> i <> inner_index)
+              in
+              let combined = Par [ inner; outer ] in
+              let new_host_sub = combined :: new_host_sub in
+              Prime (idg, new_host_sub)
         in
-        let new_primes = List.filteri primes ~f:(fun i _ -> i <> prime_index) in
-        let new_corr =
-          List.filteri corresponding ~f:(fun i _ -> i <> corr_index)
+        let new_sub =
+          List.filteri sub ~f:(fun i _ -> i <> host_index && i <> outer_index)
         in
-        let new_sub = prime_par_n :: List.append new_primes new_corr in
+        let new_sub = updated_host :: new_sub in
         Par new_sub
   | _ -> tree
 
-let pick_largest =
-  let rec aux max max_index index = function
-    | [] -> max_index
-    | t :: rest ->
-        let new_val =
-          match t with Prime (idg, _) -> Id_graph.length idg | _ -> max
-        in
-        let max_index, max =
-          if max < new_val then (index, new_val) else (max_index, max)
-        in
-        aux max max_index (index + 1) rest
-  in
-  aux 0 0 0
+let pick_largest trees =
+  fst
+    (List.foldi trees ~init:(0, 0) ~f:(fun i (max_i, max) t ->
+         let new_val = Tree.count_children t in
+         if max < new_val then (i, new_val) else (max_i, max)))
 
 let pick_first _ = 0
 
@@ -103,7 +108,8 @@ let pick_first_atom_or_first trees =
   match opt with None -> 0 | Some (i, _) -> i
 
 let switch_par =
-  switch_par_generic pick_first pick_largest pick_first_atom_or_first
+  switch_par_generic pick_largest pick_first_atom_or_first
+    pick_first_atom_or_first
 
 (*prime down - p_down*)
 

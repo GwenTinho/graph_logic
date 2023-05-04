@@ -73,9 +73,16 @@ let tree_to_graph tree : Graph.graph =
   let edges = Graph.edge_maps edges in
   { nodes; edges }
 
-let rec length tree =
+let rec count_nodes tree =
   match tree with
   | Atom _ -> 1
-  | Tensor tl -> List.fold tl ~init:0 ~f:(fun acc t -> acc + length t)
-  | Par tl -> List.fold tl ~init:0 ~f:(fun acc t -> acc + length t)
-  | Prime (_, tl) -> List.fold tl ~init:0 ~f:(fun acc t -> acc + length t)
+  | Tensor tl -> List.fold tl ~init:0 ~f:(fun acc t -> acc + count_nodes t)
+  | Par tl -> List.fold tl ~init:0 ~f:(fun acc t -> acc + count_nodes t)
+  | Prime (_, tl) -> List.fold tl ~init:0 ~f:(fun acc t -> acc + count_nodes t)
+
+let count_children tree =
+  match tree with
+  | Atom _ -> 0
+  | Tensor tl -> List.length tl
+  | Par tl -> List.length tl
+  | Prime (_, tl) -> List.length tl

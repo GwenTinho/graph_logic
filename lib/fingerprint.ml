@@ -18,10 +18,10 @@ let verify pf =
           match step with
           | AI_down -> Rules.atomic_identity_down proof_state
           | Prime_down -> Rules.prime_down proof_state
-          | Switch_Par
-              (select_first_prime, select_in_prime, select_corresponding) ->
-              Rules.switch_par_generic select_in_prime select_first_prime
-                select_corresponding proof_state
+          | Switch_Par (select_host_graph, select_outer_graph, select_inner_node)
+            ->
+              Rules.switch_par_generic select_host_graph select_outer_graph
+                select_inner_node proof_state
         in
         let new_proof_state =
           match Equality.simplify new_proof_state with

@@ -7,4 +7,5 @@ type tree =
 val successors : tree -> tree list
 val tree_to_graph : tree -> Graph.graph
 val empty_tree : unit -> tree
-val length : tree -> int
+val count_nodes : tree -> int
+val count_children : tree -> int

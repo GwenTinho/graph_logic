@@ -449,7 +449,9 @@
         },
         "expected": {},
         "steps": [
-            "sw"
+            "sw",
+            "sw",
+            "ai"
         ]
     }
 ]
