@@ -33,6 +33,6 @@ This project is an extension of the interactive modular decomposition project by
 
 ## Usage
 
-TODO
+To play around with the tool in UTOP, run "dune utop lib/" (to ignore the file dependent tests)
 
 <p align="right">(<a href="#top">back to top</a>)</p>

@@ -1,6 +1,6 @@
 (library
- (name graph_base_test)
+ (name condense_test)
  (inline_tests)
  (preprocess
   (pps ppx_inline_test ppx_assert))
- (libraries core))
+ (libraries gscore slap base))

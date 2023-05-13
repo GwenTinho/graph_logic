@@ -3,4 +3,4 @@
  (inline_tests)
  (preprocess
   (pps ppx_inline_test ppx_assert))
- (libraries core slap base))
+ (libraries gscore slap base))

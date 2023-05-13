@@ -1,5 +1,5 @@
 (library
- (name core)
+ (name gscore)
  (preprocess
   (pps ppx_jane))
  (libraries yojson base slap))

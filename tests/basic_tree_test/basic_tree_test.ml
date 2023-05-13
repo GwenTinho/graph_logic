@@ -1,20 +1,53 @@
-open Core
+open Gscore
+
 exception READERROR of string
 
-
 let path = "./graph_test_suite.json"
-
 let graphs = Parsegraph.read_file_as_graphs path
-(*Graph from example 4.16 in "An analytic proof system on graphs"*)
 
-let trees = List.map (fun (g,s) -> Caml.Option.get (Tree.tree_from_graph g s)) graphs
+let trees =
+  List.map (fun g -> Caml.Option.get (Condense.tree_from_graph g)) graphs
 
+let%test "Equality_same_ids" = List.for_all2 Equality.equal_tree trees trees
 
-let%test "Equality_same_ids" =  List.for_all2 Tree.struct_equal trees trees
-let%test "Equality_diff_ids" =  List.for_all2 Tree.struct_equal trees (List.map (fun (t:Tree.tree) -> ({t with id=t.id*2})) trees)
-let%test "Inequality_pairwise" = match trees with
-  | t1::t2::t3::_ -> not (Tree.struct_equal t1 t2) && not (Tree.struct_equal t1 t3)
-  | _ -> false
-let%test "Symmetry" = List.for_all2 (fun t1 t2 -> Tree.struct_equal t1 t2 && Tree.struct_equal t2 t1) trees trees
+let%test "Inequality_pairwise" =
+  match trees with
+  | t1 :: t2 :: t3 :: _ ->
+      (not (Equality.equal_tree t1 t2)) && not (Equality.equal_tree t1 t3)
+  | _ -> raise Exit
 
-(*TODO empty tree test and simplification tests*)
+let%test "Inequality_pairwise_eq" =
+  match trees with
+  | t1 :: t2 :: t3 :: _ ->
+      (not (Equality.equal_tree t1 t2)) && not (Equality.equal_tree t1 t3)
+  | _ -> raise Exit
+
+let%test "ineq1" =
+  match trees with
+  | t1 :: t2 :: _ :: _ -> not (Equality.equal_tree t1 t2)
+  | _ -> raise Exit
+
+let%test "ineq2" =
+  match trees with
+  | t1 :: _ :: t3 :: _ -> not (Equality.equal_tree t1 t3)
+  | _ -> raise Exit
+
+let%test "ineq3" =
+  match trees with
+  | t1 :: t2 :: _ :: _ -> not (Equality.equal_tree t1 t2)
+  | _ -> raise Exit
+
+let%test "ineq4" =
+  match trees with
+  | t1 :: _ :: t3 :: _ -> not (Equality.equal_tree t1 t3)
+  | _ -> raise Exit
+
+let%test "Symmetry" =
+  List.for_all2
+    (fun t1 t2 -> Equality.equal_tree t1 t2 && Equality.equal_tree t2 t1)
+    trees trees
+
+let%test "Symmetry_eq" =
+  List.for_all2
+    (fun t1 t2 -> Equality.equal_tree t1 t2 && Equality.equal_tree t2 t1)
+    trees trees
