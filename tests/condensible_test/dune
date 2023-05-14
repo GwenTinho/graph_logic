@@ -1,0 +1,6 @@
+(library
+ (name condense_test)
+ (inline_tests)
+ (preprocess
+  (pps ppx_inline_test ppx_assert))
+ (libraries gscore slap base))

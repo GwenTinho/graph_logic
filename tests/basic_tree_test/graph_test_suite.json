@@ -1,0 +1,76 @@
+[
+    {
+        "nodes": [
+            {
+                "id": 9,
+                "label": "a",
+                "polarisation": true
+            },
+            {
+                "id": 10,
+                "label": "b",
+                "polarisation": true
+            },
+            {
+                "id": 11,
+                "label": "c",
+                "polarisation": true
+            }
+        ],
+        "edges": []
+    },
+    {
+        "nodes": [
+            {
+                "id": 9,
+                "label": "a",
+                "polarisation": true
+            },
+            {
+                "id": 10,
+                "label": "b",
+                "polarisation": true
+            },
+            {
+                "id": 11,
+                "label": "c",
+                "polarisation": true
+            }
+        ],
+        "edges": [
+            {
+                "source": 10,
+                "target": 11
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "id": 9,
+                "label": "a",
+                "polarisation": true
+            },
+            {
+                "id": 10,
+                "label": "b",
+                "polarisation": true
+            },
+            {
+                "id": 11,
+                "label": "c",
+                "polarisation": true
+            }
+        ],
+        "edges": [
+            {
+                "source": 10,
+                "target": 11
+            },
+            {
+                "source": 11,
+                "target": 9
+            }
+        ]
+    }
+]
