@@ -1,4 +1,0 @@
-(library
- (name quartic)
- (preprocess (pps ppx_jane))
- (libraries yojson base))
