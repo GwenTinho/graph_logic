@@ -1,45 +1,5 @@
 let directed = false;
 
-let cy1 = cytoscape({
-    container: document.getElementById('cy1'),
-    wheelSensitivity: 0.2,
-    layout: {name: 'cose-bilkent', animate: false, idealEdgeLength: 120},
-    elements: [ { data: { id: '1', label: '1', polarisation: true, } }, { data: { id: '2', label: '2', polarisation: true, } }, { data: { id: '3', label: '3', polarisation: true, } }, { data: { id: '4', label: '4', polarisation: true, } }, { data: { id: '5', label: '5', polarisation: true, } }, { data: { id: '6', label: '6', polarisation: true, } }, { data: { id: '7', label: '7', polarisation: true, } }, { data: { id: '8', label: '8', polarisation: true, } }, { data: { source: '1', target: '2', } }, { data: { source: '1', target: '8', } }, { data: { source: '1', target: '3', } }, { data: { source: '2', target: '8', } }, { data: { source: '2', target: '3', } }, { data: { source: '3', target: '4', } }, { data: { source: '3', target: '5', } }, { data: { source: '4', target: '7', } }, { data: { source: '4', target: '8', } }, { data: { source: '5', target: '7', } }, { data: { source: '5', target: '8', } }, { data: { source: '6', target: '3', } }, { data: { source: '6', target: '7', } }, { data: { source: '6', target: '8', } }, { data: { source: '7', target: '8', } }, { data: { source: '3', target: '8',} }],
-    style: [
-    {
-        selector: 'node',
-        style: {
-            'background-color': function(ele) {
-                if (ele.selected()) {
-                    return 'deepskyblue';
-                }
-                else {
-                    return 'white';
-                };
-            },
-            'border-color': 'black',
-            'border-width': '1px',
-            'label': function(ele){
-                var not;
-                if(!ele.data('polarisation')) {
-                    not = '¬';
-                }
-                else {not = ''};
-                return not + ele.data('label');
-            },
-            "text-valign": "center",
-            "text-halign": "center",
-        }
-    },
-        {
-        selector: 'edge',
-        style: {
-            'width': '2px',
-        }
-    }]
-});
-cy1.changes = [];
-
 const undirected_stylesheet = {
     'curve-style': 'haystack',
     'control-point-step-size': 0,
@@ -52,9 +12,10 @@ const directed_stylesheet = {
     'target-arrow-shape': 'triangle',
 };
 
+
+
 function toggleDirected() {
     const stylesheet = directed ? undirected_stylesheet : directed_stylesheet;
-    cy1.style().selector('edge').style(stylesheet).update();
     cy2.style().selector('.compoundIn').style(stylesheet).update();
     directed = !directed;
 
@@ -62,12 +23,6 @@ function toggleDirected() {
     const disp = directed ? "undirected" : "directed";
     btn.innerText = "Make graph " + disp;
 };
-
-let mousePosition1 = {x:0, y:0};
-cy1.on('mousemove', function(mouseMoveEvent){
-    mousePosition1.x = mouseMoveEvent.renderedPosition.x;
-    mousePosition1.y = mouseMoveEvent.renderedPosition.y;
-}, false);
 
 function getMaxId(cy) {
     let max_id = 0;
@@ -78,24 +33,12 @@ function getMaxId(cy) {
     return max_id;
 };
 
-let max_id = getMaxId(cy1);
-function freshID() {
-    max_id += 1;
-    return max_id.toString();
-}
-
 function isAlphaNumeric(string) {
     return string.length == 1 && (/^[a-zA-Z0-9]/).test(string)
 };
 
 let isMouseOver = false;
-const cy_div = document.getElementById('cy1');
-cy_div.addEventListener("mouseleave", function(evt){
-    isMouseOver = false;
-});
-cy_div.addEventListener("mouseover", function(evt){
-    isMouseOver = true;
-});
+
 
 let isMouseOver2 = false;
 const cy_div2 = document.getElementById('cy2');
@@ -106,35 +49,9 @@ cy_div2.addEventListener("mouseover", function(evt){
     isMouseOver2 = true;
 });
 
-function keyPressCy1(string) {
-    if (isAlphaNumeric(string)) {
-        const node = {
-            group: 'nodes',
-            data: {
-                id: freshID(),
-                label: string,
-                polarisation: true,
-            },
-            renderedPosition: {
-                x : mousePosition1.x,
-                y : mousePosition1.y,
-            }
-        };
-        const added = cy1.add(node);
-        cy1.changes.push(["add", added]);
-        return;
-    }
-
-    if (string == "Backspace") {
-        const removed = cy1.elements(':selected').remove();
-        cy1.changes.push(["remove", removed]);
-    }
-};
-
 document.addEventListener('keyup', function(evt) {
     evt = evt || window.event;
     const string = evt.key;
-    if (isMouseOver) {keyPressCy1(string)};
     if (isMouseOver2) {keyPressCy2(string)};
 });
 
@@ -148,25 +65,12 @@ function negate(node) {
     };
 };
 
-cy1.on('cxttap', "node", function(evt) {
-    const node = evt.target;
-    if (node.selected()){
-        const selected = cy1.nodes(':selected');
-        for (n of selected){
-            negate(n);
-        }
-    }
-    else {
-        negate(node);
-    }
-});
 
 function addEdges(cy, target, selected) {
     const target_id = target.data('id');
     let to_add = [];
     for (const source of selected) {
-        if (directed && (cy == cy1 ||
-            (cy == cy2 && target.isChild() && selected[0].isChild()))) {
+        if (directed && (cy == cy2 && target.isChild() && selected[0].isChild())) {
                 if (source.edgesTo(target).length > 0) {continue}
         }
         else if (source.edgesWith(target).length > 0) {continue};
@@ -183,26 +87,9 @@ function addEdges(cy, target, selected) {
     return added;
 };
 
-cy1.on('click', "node", function(evt){
-    const node = evt.target;
-    const selected = cy1.nodes(':selected');
-    if (selected.length  == 0 || node.selected() || event.shiftKey) {
-        return;
-    }
-    else {
-        addEdges(cy1, node, selected);
-        selected.unselect();
-    };
-});
+
 
 function cleanLayout(cy) {
-    if (cy == cy1) {
-        cy.layout({
-            name: 'cose-bilkent',
-            animate: false,
-            idealEdgeLength: 120,
-        }).run();
-    };
     cy.center();
     cy.fit(10);
 };
@@ -226,38 +113,10 @@ function undo(cy) {
     }
 };
 
-function serialize() {
-    const nodes = cy1.nodes(':inside').jsons();
-    const nodeData = nodes.map(node => { return {
-        id: parseInt(node['data']['id'], 10),
-        label: node['data']['label'],
-        polarisation: node['data']['polarisation']
-    }});
-    const edges = cy1.edges(':inside').jsons();
-    const edgeData = edges.map(edge => {return {
-        source: parseInt(edge['data']['source'], 10),
-        target: parseInt(edge['data']['target'])
-    }});
-    return {
-        nodes: nodeData,
-        edges: edgeData
-    }
-}
-
-function exportGraph() {
-    const a = document.createElement("a");
-    const data = serialize();
-    const file = new Blob([JSON.stringify(data, null, 2)], {type: "text/plain"});
-    a.href = URL.createObjectURL(file);
-    a.download = "graph.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
 function exportTree() {
     const a = document.createElement("a");
-    const string = getTreeJson();
+    getTreeJsonGS();
+    const string = tree;
     if (!string) {return};
     const file = new Blob([string], {type: "text/plain"});
     a.href = URL.createObjectURL(file);
@@ -280,21 +139,7 @@ function onChange(event) {
 }
 
 function onReaderLoad(event) {
-    const obj = JSON.parse(event.target.result);
-    const nodes = obj['nodes'];
-    const nodes_obj = nodes.map(node => {
-        return {group: 'nodes', data: node}
-    });
-    const edges = obj['edges'];
-    const edges_obj = edges.map(edge => {
-        return {group: 'edges', data: edge}
-    });
-    clearGraph(cy1);
-    const added_nodes = cy1.add(nodes_obj);
-    const added_edges = cy1.add(edges_obj);
-    const eles = added_nodes.union(added_edges);
-    cy1.changes.push(["replace", eles]);
-    cleanLayout(cy1);
+    cleanLayout(cy2);
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -445,6 +290,8 @@ cy2.on('mousemove', function(mouseMoveEvent){
     mousePosition2.x = mouseMoveEvent.renderedPosition.x;
     mousePosition2.y = mouseMoveEvent.renderedPosition.y;
 }, false);
+
+
 
 function weightedBarycenter(parent, x, y) {
     const children = parent.children();
