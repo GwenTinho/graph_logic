@@ -2,4 +2,4 @@
  (name logic)
  (preprocess
   (pps ppx_jane))
- (libraries yojson base quartic slap))
+ (libraries yojson base quartic))
