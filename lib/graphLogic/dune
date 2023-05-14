@@ -1,0 +1,5 @@
+(library
+ (name logic)
+ (preprocess
+  (pps ppx_jane))
+ (libraries yojson base quartic slap))
