@@ -47,17 +47,15 @@ let count_children tree =
   | Par tl -> List.length tl
   | Prime (_, tl) -> List.length tl
 
+let ltree_of_graph (graph: Graph.graph) =
+   match Tree.tree_from_graph graph with
+  | None -> None
+  | Some md_tree -> Some (ltree_of_mdtree md_tree )
+
 let simplify ltree =
   let mdtree = mdtree_of_ltree ltree in
-  let graph = Quartic.Tree.tree_to_graph mdtree in
-  let max_id = Base.Set.fold graph.nodes ~init:0 ~f:(fun acc n -> max acc n.id) in
-  let state =  {Quartic.Graph.total_vertices=max_id; id_map=Base.Hashtbl.create (module Base.Int)}
-  in
-  let condensed = Quartic.Condense.process graph state in
-  let simplifiedmd = Quartic.Tree.tree_from_condensed condensed state in
-  match simplifiedmd with
-  | None -> None
-  | Some simplified -> Some (ltree_of_mdtree simplified )
+  let graph = Tree.tree_to_graph mdtree in
+  ltree_of_graph graph
 
 let empty_tree () = Par []
 let hash_tree (tree : ltree) = Hashtbl.hash tree

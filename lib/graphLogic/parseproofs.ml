@@ -2,17 +2,6 @@ open Quartic.Graph
 open Base
 open Yojson.Basic.Util
 
-let to_node_and_id js_obj =
-  let id = js_obj |> member "id" |> to_int in
-  let label = js_obj |> member "label" |> to_string in
-  let pol = js_obj |> member "polarisation" |> to_bool in
-  let atom = Atom { label; pol } in
-  (atom, id)
-
-let to_nodes_and_ids js_obj =
-  let json_list = to_list js_obj in
-  Base.List.unzip (List.map json_list ~f:to_node_and_id)
-
 let to_id_tuple js_obj =
   let src = js_obj |> member "source" |> to_int in
   let dest = js_obj |> member "target" |> to_int in
@@ -48,33 +37,10 @@ let rec parse_tree js_obj =
     let successors = List.map successors ~f:parse_tree in
     make_tree_node js_obj successors
 
-let from_node node =
-  let label, pol =
-    match node with
-    | Atom atom -> (`String atom.label, `Bool atom.pol)
-    | _ -> failwith "Tried to serialize non-atomic graph"
-  in
-  `Assoc [ ("label", label); ("polarisation", pol) ]
-
-let from_nodes nset =
-  let node_list = Set.elements nset in
-  let json_list = List.map node_list ~f:from_node in
-  `List json_list
-
 let from_id_tuple (id1, id2) =
   let source = `Int id1 in
   let target = `Int id2 in
   `Assoc [ ("source", source); ("target", target) ]
-
-let from_edges edge_map =
-  let edge_list = edge_tuple_list edge_map in
-  let id_list =
-    List.map edge_list ~f:(fun (v1, v2) -> (hash_node v1, hash_node v2))
-  in
-  let json_list = List.map id_list ~f:from_id_tuple in
-  json_list
-
-
 
 let serialize_id_graph (id_graph : Idgraph.id_graph) =
   let nodesMapping = List.mapi id_graph.nodes ~f:(fun i v -> (v, i + 1)) in
@@ -123,8 +89,6 @@ let rec serialize_ltree (tree : LogicalTree.ltree) : Yojson.Basic.t =
         (("successors", `List successors)
         :: ("graph", from_id_graph id_graph)
         :: node_base)
-
-
 
 let parse_idg js_obj : Idgraph.id_graph =
   let nodes = js_obj |> member "nodeCount" |> to_int in
