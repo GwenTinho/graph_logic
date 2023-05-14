@@ -1,0 +1,448 @@
+[
+    {
+        "id": "ai_test1",
+        "initial": {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": false
+                }
+            ]
+        },
+        "steps": [
+            "ai"
+        ]
+    },
+    {
+        "id": "ai_test2",
+        "initial": {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "b",
+                    "polarisation": false
+                }
+            ]
+        },
+        "steps": [
+            "ai"
+        ]
+    },
+    {
+        "id": "ai_test3",
+        "initial": {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "b",
+                    "polarisation": false
+                },
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": false
+                },
+                {
+                    "connective": "atom",
+                    "label": "b",
+                    "polarisation": true
+                }
+            ]
+        },
+        "steps": [
+            "ai"
+        ]
+    },
+    {
+        "id": "ai_test4",
+        "initial": {
+            "connective": "tensor",
+            "successors": [
+                {
+                    "connective": "par",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": false
+                        }
+                    ]
+                },
+                {
+                    "connective": "par",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": false
+                        }
+                    ]
+                }
+            ]
+        },
+        "steps": [
+            "ai"
+        ]
+    },
+    {
+        "id": "ai_test5",
+        "initial": {
+            "connective": "tensor",
+            "successors": [
+                {
+                    "connective": "par",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": false
+                        }
+                    ]
+                },
+                {
+                    "connective": "par",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": false
+                        }
+                    ]
+                }
+            ]
+        },
+        "steps": [
+            "ai"
+        ]
+    },
+    {
+        "id": "ai_test6",
+        "initial": {
+            "connective": "tensor",
+            "successors": [
+                {
+                    "connective": "par",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": false
+                        }
+                    ]
+                },
+                {
+                    "connective": "par",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "steps": [
+            "ai"
+        ]
+    },
+    {
+        "id": "pp_test1",
+        "initial": {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "prime",
+                    "graph": {
+                        "nodes": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2
+                            },
+                            {
+                                "source": 2,
+                                "target": 3
+                            },
+                            {
+                                "source": 3,
+                                "target": 4
+                            }
+                        ]
+                    },
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "c",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "d",
+                            "polarisation": false
+                        }
+                    ]
+                },
+                {
+                    "connective": "prime",
+                    "graph": {
+                        "nodes": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2
+                            },
+                            {
+                                "source": 2,
+                                "target": 3
+                            },
+                            {
+                                "source": 3,
+                                "target": 4
+                            }
+                        ]
+                    },
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "c",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "d",
+                            "polarisation": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "steps": [
+            "pp",
+            "ai"
+        ]
+    },
+    {
+        "id": "pp_test2",
+        "initial": {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "prime",
+                    "graph": {
+                        "nodes": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2
+                            },
+                            {
+                                "source": 2,
+                                "target": 3
+                            },
+                            {
+                                "source": 3,
+                                "target": 4
+                            }
+                        ]
+                    },
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "c",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "d",
+                            "polarisation": false
+                        }
+                    ]
+                },
+                {
+                    "connective": "prime",
+                    "graph": {
+                        "nodes": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2
+                            },
+                            {
+                                "source": 2,
+                                "target": 3
+                            },
+                            {
+                                "source": 3,
+                                "target": 4
+                            }
+                        ]
+                    },
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "c",
+                            "polarisation": true
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "d",
+                            "polarisation": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "steps": [
+            "pp",
+            "ai"
+        ]
+    },
+    {
+        "id": "sw_test",
+        "initial": {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "b",
+                    "polarisation": true
+                },
+                {
+                    "connective": "tensor",
+                    "successors": [
+                        {
+                            "connective": "atom",
+                            "label": "a",
+                            "polarisation": false
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "b",
+                            "polarisation": false
+                        }
+                    ]
+                }
+            ]
+        },
+        "steps": [
+            "sw",
+            "sw",
+            "ai"
+        ]
+    }
+]

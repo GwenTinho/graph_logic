@@ -2,17 +2,42 @@
 
 [![Build](https://github.com/Remyjck/modular_decomposition/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Remyjck/modular_decomposition/actions/workflows/main.yml)
 
-Implmentation of Proof Search for the Graphical Proof System GS.
+Modular Decomposition of Graphs
 ===
 
 
 ## About The Project
 
-This project is an extension of the interactive modular decomposition project by Remyjck. 
+This project aims to provide an interactive way to interact with graphs as proofs. The main functionalities provided are the creation of graphs and the modular decomposition of any inputted graph.
+
+## Prerequisites
+
+Building this project requires the Ocaml package manager [opam](https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system).
+* Ubuntu
+  ```sh
+  add-apt-repository ppa:avsm/ppa
+  apt update
+  apt install opam
+  ```
+* macOs
+  ```sh
+  # Homebrew
+  brew install opam
+
+  # MacPort
+  port install opam
+  ```
+* Windows
+    It is recommended to use WSL or Cygwin to build this project using windows.
+
+Once opam is installed, it can be used to install Ocaml.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Build requirements
 
 * Ocaml 4.13 or later
+* Js_of_ocaml 4.0 or later
 * Yojson 1.7 or later
 * Base 4.13 or later
 
@@ -20,19 +45,24 @@ This project is an extension of the interactive modular decomposition project by
 
 ## Installation
 1. Clone the repo
-
-2. Install opam packages
+   ```sh
+   git clone https://github.com/Remyjck/modular_decomposition.git
+   ```
+2. Go into the Ocaml project directory
+   ```sh
+   cd quartic
+   ```
+4. Install opam packages
    ```sh
    opam install . --deps-only
    ```
-3. Build the project files
+4. Build the project files
    ```sh
    dune build
    ```
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Usage
 
-To play around with the tool in UTOP, run "dune utop lib/" (to ignore the file dependent tests)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+Building the projects generates a `main.bc.js` file in the `_build/default/src/` subdirectory of `quartic/`. This JavaScript file is then used by `index.html` to run the project. Once the project is built, it is thus only necessary to open `index.html` with the browser of your choice.

@@ -2,7 +2,7 @@ open Quartic
 open Base
 
 let js_obj =
-  let s = Stdio.In_channel.read_all "graph.json" in
+  let s = Stdio.In_channel.read_all "graph2.json" in
   Yojson.Basic.from_string s
 
 let graph, state = Parsegraph.parse js_obj

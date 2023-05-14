@@ -1,5 +1,5 @@
 (library
- (name test_tree_to_graph)
+ (name test_condensible)
  (inline_tests)
  (preprocess (pps ppx_inline_test))
  (libraries quartic))

@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "label": "1",
+      "polarisation": true
+    },
+    {
+      "id": 2,
+      "label": "2",
+      "polarisation": true
+    },
+    {
+      "id": 3,
+      "label": "3",
+      "polarisation": true
+    },
+    {
+      "id": 4,
+      "label": "4",
+      "polarisation": true
+    },
+    {
+      "id": 5,
+      "label": "5",
+      "polarisation": true
+    },
+    {
+      "id": 6,
+      "label": "6",
+      "polarisation": true
+    },
+    {
+      "id": 7,
+      "label": "7",
+      "polarisation": true
+    },
+    {
+      "id": 8,
+      "label": "8",
+      "polarisation": true
+    }
+  ],
+  "edges": [
+    {
+      "source": 1,
+      "target": 2
+    },
+    {
+      "source": 1,
+      "target": 8
+    },
+    {
+      "source": 1,
+      "target": 3
+    },
+    {
+      "source": 2,
+      "target": 8
+    },
+    {
+      "source": 2,
+      "target": 3
+    },
+    {
+      "source": 3,
+      "target": 4
+    },
+    {
+      "source": 3,
+      "target": 5
+    },
+    {
+      "source": 4,
+      "target": 7
+    },
+    {
+      "source": 4,
+      "target": 8
+    },
+    {
+      "source": 5,
+      "target": 7
+    },
+    {
+      "source": 5,
+      "target": 8
+    },
+    {
+      "source": 6,
+      "target": 3
+    },
+    {
+      "source": 6,
+      "target": 7
+    },
+    {
+      "source": 6,
+      "target": 8
+    },
+    {
+      "source": 7,
+      "target": 8
+    },
+    {
+      "source": 8,
+      "target": 3
+    }
+  ]
+}

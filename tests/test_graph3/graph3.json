@@ -1,0 +1,43 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "label": "1",
+      "polarisation": true
+    },
+    {
+      "id": 5,
+      "label": "5",
+      "polarisation": true
+    },
+    {
+      "id": 6,
+      "label": "6",
+      "polarisation": true
+    },
+    {
+      "id": 9,
+      "label": "e",
+      "polarisation": true
+    },
+    {
+      "id": 10,
+      "label": "f",
+      "polarisation": true
+    }
+  ],
+  "edges": [
+    {
+      "source": 6,
+      "target": 9
+    },
+    {
+      "source": 5,
+      "target": 9
+    },
+    {
+      "source": 10,
+      "target": 5
+    }
+  ]
+}
