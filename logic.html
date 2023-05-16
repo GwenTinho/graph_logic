@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Graph Modular Decomposition</title>
+    <title>Graph Logic</title>
     <script src="js/dependencies/cytoscape.js"></script>
     <script src="https://unpkg.com/layout-base/layout-base.js"></script>
     <script src="https://unpkg.com/cose-base/cose-base.js"></script>
@@ -36,18 +36,27 @@
 
     <section>
         <div id="layout">
+            <a href="index.html">index</a>
+            <div class="col">
+                <div class="rule-history">
+                    <h3>History</h3>
+                    <ul id="history">
+
+                    </ul>
+                </div>
+            </div>
             <div class="col">
                 <div class="grid">
-                    <button type="button" onclick="clearGraph(cy2)">Clear Tree</button>
-                    <button type="button" onclick="cy2.center(); cy2.fit(10)">Center Tree</button>
-                    <button type="button" onclick="document.getElementById('upload').click()">Import Tree</button>
+                    <button type="button" id="clear">Clear Tree</button>
+                    <button type="button" id="center">Center Tree</button>
+                    <button type="button" id="import">Import Tree</button>
                     <input id="upload" type="file" style="display: none;" />
                     <!-- TODO add upload functionality for proofs -->
                 </div>
-                <div id="cy2" class="cy"></div>
+                <div id="cy" class="cy"></div>
                 <div class="grid">
-                    <button type="button" id="download2" onclick="exportTree()">Download Tree</button>
-                    <button type="button" onclick="undo(cy2)">Undo</button>
+                    <button type="button" id="download">Download Tree</button>
+                    <button type="button" id="undo">Undo</button>
                 </div>
                 <article style="padding-bottom: 20px; text-align: left; width: 35vw;">
                     <details>
@@ -68,10 +77,29 @@
                     </details>
                 </article>
             </div>
+            <div class="col">
+                <div class="rule-selection">
+                    <h3>Rule Selection</h3>
+                    <div class="col">
+                        <button type="button" id="ai">AI</button>
+                        <button type="button" id="spar">S&</button>
+                        <button type="button" id="prime">Prime</button>
+                    </div>
+                    <button type="button" id="apply">Apply</button>
+                </div>
+            </div>
         </div>
     </section>
 
-    <script src="js/logic.js"></script>
+
+    <script type="module" src="/js/lib/clickHandler.js"></script>
+    <script type="module" src="/js/lib/helper.js"></script>
+    <script type="module" src="/js/lib/keypressHandler.js"></script>
+    <script type="module" src="/js/lib/nodes.js"></script>
+    <script type="module" src="/js/lib/ruleHandlers.js"></script>
+    <script type="module" src="/js/lib/style.js"></script>
+    <script type="module" src="/js/lib/treeHelpers.js"></script>
+    <script type="module" src="/js/logic.js"></script>
     <script src="_build/default/src/main.bc.js"></script>
 
 </body>

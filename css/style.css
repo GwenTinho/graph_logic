@@ -37,10 +37,19 @@
     flex-direction: column;
 }
 
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
 button {
     padding-right: 0px;
     padding-left: 0px;
     margin-top: 20px;
+}
+
+#apply {
+    background: rgb(41, 23, 202);
 }
 
 .grid {

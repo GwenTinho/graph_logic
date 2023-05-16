@@ -1,8 +1,8 @@
 open Quartic
 open Base
 open Js_of_ocaml
-open Drawing
 open Reading
+open Drawing
 
 let get_nodes_arr cy : Js.Unsafe.any_js_array =
   let colletion = Js.Unsafe.meth_call cy "nodes" [||] in
@@ -48,6 +48,31 @@ let get_layout cy root =
     end
   in
   cy##layout options
+
+let isPrimeIdGraph ?directed idGraph =
+  let jsnode_list = idGraph##nodes |> Js.to_array |> Array.to_list in
+  let jsedge_list = idGraph##edges |> Js.to_array |> Array.to_list in
+  let node_list =
+    List.map jsnode_list ~f:(fun n ->
+        let label = n##id |> Js.to_string in
+        let id = Util.remove_rep label in
+        let atom = Graph.Atom { Graph.label; pol = true } in
+        { Graph.connective = atom; id })
+  in
+  let edge_list =
+    List.map jsedge_list ~f:(fun e ->
+        let source_id =
+          e##data (Js.string "source") |> Js.to_string |> Util.remove_rep
+        in
+        let target_id =
+          e##data (Js.string "target") |> Js.to_string |> Util.remove_rep
+        in
+        let source = List.find_exn node_list ~f:(fun v -> v.id = source_id) in
+        let target = List.find_exn node_list ~f:(fun v -> v.id = target_id) in
+        (source, target))
+  in
+  let graph, _ = Graph.to_graph ?directed node_list edge_list in
+  Condense.isPrime graph
 
 let decompose () =
   let cy = Js.Unsafe.js_expr "cy1" in
@@ -111,44 +136,18 @@ let recompose () =
     in
     Js.Unsafe.global##cleanLayout cy1
 
-let isPrimeIdGraph ?directed idGraph =
-  let jsnode_list = idGraph##nodes |> Js.to_array |> Array.to_list in
-  let jsedge_list = idGraph##edges |> Js.to_array |> Array.to_list in
-  let node_list =
-    List.map jsnode_list ~f:(fun n ->
-        let label = n##id |> Js.to_string in
-        let id = Util.remove_rep label in
-        let atom = Graph.Atom { Graph.label; pol = true } in
-        { Graph.connective = atom; id })
-  in
-  let edge_list =
-    List.map jsedge_list ~f:(fun e ->
-        let source_id =
-          e##data (Js.string "source") |> Js.to_string |> Util.remove_rep
-        in
-        let target_id =
-          e##data (Js.string "target") |> Js.to_string |> Util.remove_rep
-        in
-        let source = List.find_exn node_list ~f:(fun v -> v.id = source_id) in
-        let target = List.find_exn node_list ~f:(fun v -> v.id = target_id) in
-        (source, target))
-  in
-  let graph, _ = Graph.to_graph ?directed node_list edge_list in
-  Condense.isPrime graph
-
-let getTreeJson () = Js.Unsafe.global##.tree
-
 let serialize_tree () =
-  let cy = Js.Unsafe.js_expr "cy2" in
+  let cy = Js.Unsafe.js_expr "cy" in
   let root_arr = cy##nodes (Js.string ".root") |> Js.to_array in
   if Array.is_empty root_arr then ()
   else
     let root = Array.get root_arr 0 in
     let tree = read_tree root in
-    Js.Unsafe.global##.tree :=
-      Logic.Parseproofs.serialize_ltree (Logic.LogicalTree.ltree_of_mdtree tree)
-      |> Yojson.Basic.pretty_to_string |> Js.string
+    Js.Unsafe.global##.tree_str
+    := Logic.Parseproofs.serialize_ltree
+         (Logic.LogicalTree.ltree_of_mdtree tree)
+       |> Yojson.Basic.pretty_to_string |> Js.string
 
 let getTreeJsonGS () =
   let () = serialize_tree () in
-  Js.Unsafe.global##.ltree
+  Js.Unsafe.global##.tree_str

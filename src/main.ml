@@ -4,9 +4,8 @@ open Js_of_ocaml
 let _ =
   Js.export_all
     (object%js
-       method decompose = decompose ()
-       method getTreeJson = getTreeJson ()
        method getTreeJsonGS = getTreeJsonGS ()
+       method decompose = decompose ()
        method recompose = recompose ()
 
        method isPrime graph =
