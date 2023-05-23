@@ -1,10 +1,8 @@
-import { connectedTo, checkConnected, negate, getRoot, getBeforeRoot, pathToRoot, checkPrime } from "./nodes.js";
-
 const history = [];
 
 // check if tree is valid before a proof TODO
-function isValid(cy) {
-    if (!checkConnected(cy)) {
+function isValid(tree) {
+    if (!tree.isConnected()) {
         const a = document.createElement("a");
         a.href = "#dontsee";
         a.id = "dontsee";
@@ -23,13 +21,13 @@ function isValid(cy) {
     return true;
 };
 
-function handleAi(cy) {
-    if (!isValid(cy)) return;
+function handleAi(tree) {
+    if (!isValid(tree)) return;
     // TODO
 }
 
-function handleSPar(cy) {
-    if (!isValid(cy)) return;
+function handleSPar(tree) {
+    if (!isValid(tree)) return;
     history.push("spar");
     const ul = document.getElementById("history");
     const li = document.createElement("li");
@@ -37,8 +35,8 @@ function handleSPar(cy) {
     ul.appendChild(li);
 }
 
-function handlePrime(cy) {
-    if (!isValid(cy)) return;
+function handlePrime(tree) {
+    if (!isValid(tree)) return;
     history.push("prime");
     const ul = document.getElementById("history");
     const li = document.createElement("li");
@@ -46,7 +44,7 @@ function handlePrime(cy) {
     ul.appendChild(li);
 }
 
-function handleApply(cy) {
+function handleApply(tree) {
 
 
 
