@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", event => {
     document.getElementById('upload').addEventListener('change', async evt => {
         try {
             let content = await evt?.target?.files[0]?.text();
-            window.file = content;
+            window.tree = Tree.deserialize(JSON.parse(content));
             cleanLayout(cy);
         }
         catch (err) {

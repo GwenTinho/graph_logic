@@ -11,6 +11,12 @@ class TreeNode {
         if (!this.nodeData.canHaveChildren) {
             return false;
         }
+
+        if (this.nodeData.label == "^") {
+            this.nodeData.graph.addRepNode(this.nodeData.id, node.nodeData.id);
+            // TODO
+        }
+
         // the successors are sorted by id to make binary search possible
         // we can use this to insert the new node in the correct position
 
@@ -35,6 +41,17 @@ class TreeNode {
                 return node;
             }
         }
+    }
+
+    findMaxId() {
+        let maxId = this.nodeData.id;
+        for (const successor of this.successors) {
+            const id = successor.findMaxId();
+            if (id > maxId) {
+                maxId = id;
+            }
+        }
+        return maxId;
     }
 
     dropNode(id) {
@@ -92,12 +109,12 @@ class TreeNode {
     }
 
     static deserialize(serialized) {
-        const nodeData = NodeData.deserialize(serialized.nodeData);
+        const nodeData = TreeNodeData.deserialize(serialized);
         const successors = [];
         for (const successor of serialized.successors) {
-            successors.push(Node.deserialize(successor));
+            successors.push(TreeNode.deserialize(successor));
         }
-        return new Node(nodeData, successors);
+        return new TreeNode(nodeData, successors);
     }
 
     render(cy) {

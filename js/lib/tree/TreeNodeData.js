@@ -1,12 +1,5 @@
+import { isValidLabel } from "../util/helper.js";
 import IdGraph from "./IdGraph.js";
-
-function isAlphaNumeric(string) {
-    return string.length == 1 && (/^[a-zA-Z0-9]/).test(string)
-};
-
-function isValidLabel(label) {
-    return isAlphaNumeric(label) || label == "&" || label == "*" || label == "^" || label == ">";
-}
 
 function toClass(string) {
     switch (string) {
@@ -129,6 +122,23 @@ class TreeNodeData {
                 };
         }
     }
+
+    static deserialize(serialized) {
+        switch (serialized.connective) {
+            case "par":
+                return new TreeNodeData("&", 0, 0, true, serialized.id);
+            case "tensor":
+                return new TreeNodeData("*", 0, 0, true, serialized.id);
+            case "prime":
+                const data = new TreeNodeData("^", 0, 0, true, serialized.id);
+                data.graph = IdGraph.deserialize(serialized.graph);
+                return data;
+            case "before":
+                return new TreeNodeData(">", 0, 0, true, serialized.id);
+            default:
+                return new TreeNodeData(serialized.label, 0, 0, serialized.polarisation, serialized.id);
+        }
+    }
 }
 
-export { TreeNodeData, isAlphaNumeric };
+export { TreeNodeData };

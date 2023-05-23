@@ -147,6 +147,29 @@ class Tree {
             return this.roots?.[0].serialize();
         }
     }
+
+    updateMaxId() {
+        let maxId = 0;
+        for (const root of this.roots) {
+            const id = root.findMaxId();
+            if (id > maxId) {
+                maxId = id;
+            }
+        }
+        this.maxId = maxId;
+    }
+
+    static deserialize(data) {
+        const tree = new Tree();
+
+        if (data) {
+            const root = TreeNode.deserialize(data);
+            tree.roots.push(root);
+            tree.updateMaxId();
+        }
+
+        return tree;
+    }
 }
 
 export default Tree;
