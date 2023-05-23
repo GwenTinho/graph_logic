@@ -5,6 +5,8 @@ open Base
 
 (*Inference rules*)
 
+let ( let* ) o f = match o with None -> None | Some x -> f x
+
 let find_fitting_pair lst comp =
   let rec aux rem1 rem2 =
     match (rem1, rem2) with
@@ -14,18 +16,20 @@ let find_fitting_pair lst comp =
   in
   aux lst lst
 
-
 let is_atom tree = match tree with Atom _ -> true | _ -> false
 let find_dual_pair trees = find_fitting_pair trees Equality.is_dual
 
 let find_atomic_dual_pair trees =
-  let pair_opt = find_fitting_pair trees (fun t1 t2 ->
-      match (t1, t2) with
-      | Atom a, Atom b -> Equality.is_dual_atom a b
-      | _ -> false) in
+  let pair_opt =
+    find_fitting_pair trees (fun t1 t2 ->
+        match (t1, t2) with
+        | Atom a, Atom b -> Equality.is_dual_atom a b
+        | _ -> false)
+  in
   match pair_opt with
   | None -> None
-  | Some (Atom a,Atom b) -> if Equality.is_dual_atom a b then Some (a, b) else None
+  | Some (Atom a, Atom b) ->
+      if Equality.is_dual_atom a b then Some (a, b) else None
   | _ -> None
 
 let propagate_once f tree =
@@ -45,12 +49,50 @@ let rec atomic_identity_down (tree : ltree) =
         | None -> propagate_once atomic_identity_down tree
         | Some (a, b) ->
             Par
-              (List.filter nodes ~f:(function Atom n -> not (Equality.equal_atom n a || Equality.equal_atom n b) | _ -> false)
-                   )
+              (List.filter nodes ~f:(function
+                | Atom n ->
+                    not (Equality.equal_atom n a || Equality.equal_atom n b)
+                | _ -> false))
       in
-      if LogicalTree.count_nodes new_tree = LogicalTree.count_nodes tree then tree
+      if LogicalTree.count_nodes new_tree = LogicalTree.count_nodes tree then
+        tree
       else atomic_identity_down new_tree
   | _ -> propagate_once atomic_identity_down tree
+
+let atomic_identity_down_paths (tree : ltree) (pathAtom1 : int list)
+    (pathAtom2 : int list) (pathPar : int list) =
+  (*If the atom paths dont coincide up to the last node return none *)
+  if List.length pathAtom1 <> List.length pathAtom2 then None
+  else
+    let pathAtom1 = List.rev pathAtom1 in
+    let pathAtom2 = List.rev pathAtom2 in
+    let* pathFromLast1 = List.tl pathAtom1 in
+    let* pathFromLast2 = List.tl pathAtom2 in
+    let different = List.exists2 pathFromLast1 pathFromLast2 ~f:( = ) in
+    let different =
+      match different with Ok res -> res | Unequal_lengths -> true
+    in
+    if different then None
+    else
+      LogicalTree.map_at_path tree pathPar ~f:(fun p ->
+          match p with
+          | Par nodes -> (
+              let* idx1 = List.rev pathAtom1 |> List.hd in
+              let* idx2 = List.rev pathAtom2 |> List.hd in
+              let* a = List.nth nodes idx1 in
+              let* b = List.nth nodes idx2 in
+              match (a, b) with
+              | Atom a, Atom b ->
+                  if Equality.is_dual_atom a b then
+                    Some
+                      (Par
+                         (List.filteri nodes ~f:(fun i _ ->
+                              i <> idx1 && i <> idx2)))
+                  else None
+              | _ -> None)
+          | _ -> None)
+
+(*atomic identity up - ai_up*)
 
 (*Switch par implementation*)
 (*P(M1,...,Mn) & N -> P(M1,...,Mi & N,...,Mn) *)
