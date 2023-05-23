@@ -1,14 +1,14 @@
-import { handleClick } from "./lib/clickHandler.js";
-import { handleKeyPress } from "./lib/keypressHandler.js";
-import { handleAi, handleApply, handlePrime, handleSPar } from "./lib/ruleHandlers.js";
-import { style } from "./lib/style.js";
+import { handleClick } from "./lib/handlers/clickHandler.js";
+import { cleanLayout, clearGraph, exportTree } from "./lib/util/helper.js";
+import { handleKeyPress } from "./lib/handlers/keypressHandler.js";
+import { handleAi, handleApply, handlePrime, handleSPar } from "./lib/handlers/ruleHandlers.js";
+import { style } from "./lib/util/style.js";
+import Tree from "./lib/tree/Tree.js";
 
 
-window.directed = false;
-window.tree = {};
-window.tree_str = "";
-window.isMouseOver = false;
-const cy_div = document.getElementById('cy');
+// Initialise global variables
+
+window.tree = new Tree();
 
 window.cy = cytoscape({
     container: document.getElementById('cy'),
@@ -16,84 +16,60 @@ window.cy = cytoscape({
     style: style
 });
 
-
 cy.changes = [];
 
 window.mousePosition = { x: 0, y: 0 };
 
+window.isMouseOver = false;
 
-cy_div.addEventListener("mouseleave", evt => {
+
+// Initialise event listeners
+
+document.addEventListener("DOMContentLoaded", event => {
+    document.getElementById('upload').addEventListener('change', async evt => {
+        try {
+            let content = await evt?.target?.files[0]?.text();
+            window.file = content;
+            cleanLayout(cy);
+        }
+        catch (err) {
+            console.error(err);
+        }
+    });
+});
+
+
+const cy_div = document.getElementById('cy');
+cy_div.addEventListener("mouseleave", function (evt) {
     isMouseOver = false;
 });
-cy_div.addEventListener("mouseover", evt => {
+cy_div.addEventListener("mouseover", function (evt) {
     isMouseOver = true;
 });
 
-function updateTree() {
-    tree_str = getTreeJsonGS();
-    tree = JSON.parse(tree_str);
-}
 
 document.addEventListener('keyup', evt => {
-    handleKeyPress(cy, mousePosition)(evt);
-    updateTree();
+    if (!isMouseOver) return;
+    handleKeyPress(cy, mousePosition, tree, evt);
 });
 
-document.getElementById("download").addEventListener("click", evt => exportTree());
+document.getElementById("download").addEventListener("click", evt => exportTree(tree));
 document.getElementById("undo").addEventListener("click", evt => undo(cy));
-document.getElementById("clear").addEventListener("click", evt => clearGraph(cy));
-document.getElementById("center").addEventListener("click", evt => {
-    cy.center();
-    cy.fit(10);
+document.getElementById("clear").addEventListener("click", evt => {
+    clearGraph(cy)
+    window.tree = new Tree();
 });
+document.getElementById("center").addEventListener("click", evt => cleanLayout(cy));
 document.getElementById("import").addEventListener("click", evt => {
     document.getElementById('upload').click();
 });
 
-const ai = document.getElementById("ai");
-const spar = document.getElementById("spar");
-const prime = document.getElementById("prime");
-const apply = document.getElementById("apply");
+document.getElementById("ai").addEventListener("click", evt => handleAi(tree));
+document.getElementById("spar").addEventListener("click", evt => handleSPar(tree));
+document.getElementById("prime").addEventListener("click", evt => handlePrime(tree));
+document.getElementById("apply").addEventListener("click", evt => handleApply(tree));
 
-ai.addEventListener("click", evt => handleAi(cy));
-spar.addEventListener("click", evt => handleSPar(cy));
-prime.addEventListener("click", evt => handlePrime(cy));
-apply.addEventListener("click", evt => handleApply(cy));
-
-
-
-
-
-
-function exportTree() {
-    const a = document.createElement("a");
-    updateTree();
-    const string = tree_str;
-    if (!string) { return };
-    const file = new Blob([string], { type: "text/plain" });
-    a.href = URL.createObjectURL(file);
-    a.download = "tree.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function clearGraph(cy) {
-    const removed = cy.elements().remove();
-    cy.changes.push(["remove", removed]);
-}
-
-function onChange(event) {
-    let reader = new FileReader();
-    reader.onload = evt => cleanLayout(cy);
-    reader.readAsText(event.target.files[0]);
-
-}
-
-document.addEventListener("DOMContentLoaded", event => {
-    document.getElementById('upload').addEventListener('change', onChange);
-});
-
+// CY EVENTS
 
 cy.on('mousemove', mouseMoveEvent => {
     mousePosition.x = mouseMoveEvent.renderedPosition.x;
@@ -102,8 +78,7 @@ cy.on('mousemove', mouseMoveEvent => {
 
 
 cy.on('click', "node", evt => {
-    handleClick(cy, directed)(evt);
-    updateTree();
+    handleClick(cy, tree, evt);
 });
 
 cy.on('dblclick', "node", evt => {
@@ -116,12 +91,15 @@ cy.on('cxttap', "node", evt => {
     const node = evt.target;
     if (node.selected()) {
         const selected = cy.nodes(':selected');
-        for (n of selected) {
-            negate(n);
+        for (const n of selected) {
+            tree.negate(n.id());
+            n.data('polarisation', !node.data('polarisation'));
+            tree.render(cy);
         }
     }
     else {
-        negate(node);
+        tree.negate(node.id());
+        node.data('polarisation', !node.data('polarisation'));
+        tree.render(cy);
     }
-    updateTree();
 });
