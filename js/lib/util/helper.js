@@ -21,6 +21,14 @@ function weightedBarycenter(parent, x, y) {
     return barycenter;
 }
 
+function isAlphaNumeric(string) {
+    return string.length == 1 && (/^[a-zA-Z0-9]/).test(string)
+};
+
+function isValidLabel(label) {
+    return isAlphaNumeric(label) || label == "&" || label == "*" || label == "^" || label == ">";
+}
+
 
 function undo(cy) { // TODO refactor
     if (cy.changes.length == 0) { return };
@@ -68,4 +76,4 @@ function cleanLayout(cy) {
     cy.fit(10);
 };
 
-export { weightedBarycenter, undo, cleanLayout, clearGraph, exportTree };
+export { weightedBarycenter, undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel };

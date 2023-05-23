@@ -1,12 +1,4 @@
-import { weightedBarycenter } from "../util/helper.js";
-import { isAlphaNumeric } from "../tree/TreeNodeData.js";
-
-
-function getBeforeRoot(node) {
-    const pred = node.predecessors().nodes()[0];
-    if (pred) return getBeforeRoot(pred)
-    return node;
-};
+import { isAlphaNumeric, weightedBarycenter } from "../util/helper.js";
 
 
 function changeEleId(cy, ogid, newid) {
@@ -151,7 +143,6 @@ function handleClick(cy, tree, evt) {
     };
 
     cy.batch(() => {
-        console.log(source, target);
         tree.connectRoots(source.id(), target.id());
         tree.render(cy);
         //if (added) { added.addClass(classes) };

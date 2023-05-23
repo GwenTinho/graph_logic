@@ -20,13 +20,19 @@ function handleKeyPress(cy, mousePosition, tree, evt) {
         return;
     }
 
-    tree.addNode(string, mousePosition.x, mousePosition.y, true);
-    tree.render(cy);
-
 
     if (selected.length == 1 && selected[0].hasClass("before")) throw "Not implemented";
 
     if (selected.length == 1 && selected[0].hasClass("prime")) {
+        const node = tree.getNode(selected[0].id());
+        // TODO check if node is prime and if so, add a prime node
+        if (node.label == "^") {
+            // we give the new node the same id since it represents the same node
+            node.nodeData.graph.addNode(mousePosition.x, mousePosition.y, node.id);
+            // TODO think about how to model this
+        }
+
+
         selected.data('label', "");
         const id_rep = new_id + "-rep";
         const barycenter = weightedBarycenter(selected[0], mousePosition.x, mousePosition.y);
@@ -60,6 +66,11 @@ function handleKeyPress(cy, mousePosition, tree, evt) {
         const added_rep_edge = cy.add(rep_edge);
         added_rep_edge.addClass('compoundOut');
     }
+
+    tree.addNode(string, mousePosition.x, mousePosition.y, true);
+    tree.render(cy);
+
+
 }
 
 

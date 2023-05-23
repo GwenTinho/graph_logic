@@ -2,20 +2,18 @@
 
 class IdGraph {
     constructor() {
-        this.nodes = [];
-        this.adjacency = [];
+        this.nodes = {};
+        this.adjacency = {};
     }
 
     addNode(x, y, id) {
-        this.nodes.push({
-            x: x,
-            y: y,
-            id: id,
-        });
+        this.nodes[id] = { x: x, y: y };
+        this.adjacency[id] = [];
     }
 
     addEdge(id1, id2) {
-        this.edges.push({ source: id1, target: id2 });
+        this.adjacency[id1].push(id2);
+        //this.adjacency[id2].push(id1); undirected edges
     }
 
     isValid() {
@@ -23,11 +21,13 @@ class IdGraph {
     }
 
     render(cy) {
-        for (const { x, y, id } of this.nodes) {
+        // redo render using new format
+        for (const id in this.nodes) {
+            const { x, y } = this.nodes[id];
             const node = {
                 group: 'nodes',
                 data: {
-                    id: id,
+                    id: id + "prime-representative",
                     label: ""
                 },
                 renderedPosition: {
@@ -38,20 +38,27 @@ class IdGraph {
             const added = cy.add(node);
             cy.changes.push(["add", added]);
             added.addClass('inCompound');
-        }
 
-
-        for (const { source, target } of this.edges) {
-            const edge = {
-                data: {
-                    source: source,
-                    target: target,
-                },
-            };
-            const added = cy.add(edge);
-            cy.changes.push(["add", added]);
-            added.addClass('compoundOut');
+            for (const target of this.adjacency[id]) {
+                const edge = {
+                    data: {
+                        source: id + "prime-representative",
+                        target: target + "prime-representative",
+                    },
+                };
+                const added = cy.add(edge);
+                cy.changes.push(["add", added]);
+                added.addClass('compoundOut');
+            }
         }
+    }
+
+    serialize() {
+        // TODO
+    }
+
+    static deserialize() {
+        // TODO
     }
 }
 

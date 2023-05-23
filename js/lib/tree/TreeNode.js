@@ -13,7 +13,8 @@ class TreeNode {
         }
 
         if (this.nodeData.label == "^") {
-            this.nodeData.graph.addRepNode(this.nodeData.id, node.nodeData.id);
+            const { x, y, id } = node.nodeData;
+            this.nodeData.graph.addNode(x, y, id);
             // TODO
         }
 
