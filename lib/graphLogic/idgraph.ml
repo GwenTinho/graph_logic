@@ -1,12 +1,14 @@
 open Base
-open Slap.D
-open Slap.Size
 open Poly
+open BitMatrix
 
 type id_graph = { nodes : int list; edges : (int * int) list }
 
-let idg_of_tidg (tig: Quartic.Tree.id_graph) = { nodes = tig.nodes; edges = tig.edges }
-let tidg_of_idg (tig: id_graph): Quartic.Tree.id_graph = { nodes = tig.nodes; edges = tig.edges }
+let idg_of_tidg (tig : Quartic.Tree.id_graph) =
+  { nodes = tig.nodes; edges = tig.edges }
+
+let tidg_of_idg (tig : id_graph) : Quartic.Tree.id_graph =
+  { nodes = tig.nodes; edges = tig.edges }
 
 let isEdge (a, b) idg =
   let { nodes = _; edges } = idg in
@@ -24,50 +26,40 @@ let length_edges idg =
 
 (*We are passing the dimension since we need to keep the scope outside this function*)
 (*NOTE the Slap library creates matricies that are 1 indexed, this means that we want to avoid indexing at all costs*)
-let adj_mat idg dim =
+let adj_mat idg =
+  let dim = length idg in
   let { nodes; edges = _ } = idg in
   let nodes = List.to_array nodes in
-  let m =
-    Mat.init dim dim (fun i j ->
-        (*fill symetrically*)
-        if isEdge (nodes.(i - 1), nodes.(j - 1)) idg then 1.0 else 0.0)
-  in
+  let m = create dim dim (fun i j -> isEdge (nodes.(i), nodes.(j)) idg) in
   m
 
-let mul a b = gemm ~transa:Slap.Common.normal a ~transb:Slap.Common.normal b
-let mulT a b = gemm ~transa:Slap.Common.normal a ~transb:Slap.Common.trans b
-
-let degrees idg dim =
-  let m = adj_mat idg dim in
-  let v = Mat.fold_top (fun acc vec -> Vec.add acc vec) (Vec.make0 dim) m in
-  Vec.to_array v
+let degrees idg =
+  let m = adj_mat idg in
+  Array.fold m
+    ~init:(Array.init (length idg) ~f:(fun _ -> 0))
+    ~f:(fun acc row ->
+      Array.mapi row ~f:(fun i x -> if x then acc.(i) + 1 else acc.(i)))
 
 let genInitialPerm idg1 idg2 dim1 dim2 =
-  let degArr1 = degrees idg1 dim1 in
-  let degArr2 = degrees idg2 dim2 in
-  Mat.init dim1 dim2 (fun i j ->
-      if degArr2.(j - 1) >= degArr1.(i - 1) then 1.0 else 0.0)
+  let degArr1 = degrees idg1 in
+  let degArr2 = degrees idg2 in
+  create dim1 dim2 (fun i j -> degArr2.(j) >= degArr1.(i))
 
-let permToAssoc idg1 idg2 perm =
+let permToAssoc idg1 idg2 (perm : bit_matrix) =
   let nodes1 = Array.of_list idg1.nodes in
   let nodes2 = Array.of_list idg2.nodes in
-  let perm_assoc =
-    List.concat_mapi (Mat.to_list perm) ~f:(fun j l ->
-        List.mapi l ~f:(fun i e -> (i, j, e)))
+  let perm_assoc = to_assoc_list perm in
+  let nodemapping =
+    List.map perm_assoc ~f:(fun (i, j) -> (nodes1.(i), nodes2.(j)))
   in
-  let filtered = List.filter perm_assoc ~f:(fun (_, _, e) -> e = 1.0) in
-  let filtered = List.map filtered ~f:(fun (i, j, _) -> (i, j)) in
-  let filtered =
-    List.map filtered ~f:(fun (i, j) -> (nodes1.(i), nodes2.(j)))
-  in
-  Map.of_alist_exn (module Int) filtered
+  Map.of_alist_exn (module Int) nodemapping
 
 let setImmut a i v =
   let cpy = Array.copy a in
   let () = cpy.(i) <- v in
   cpy
 
-let isIso perm matA matB = matA <= mulT perm (mul perm matB)
+let isIso perm matA matB = matA <= mul perm (transpose (mul perm matB))
 
 (*TODO implement prune*)
 let refine perm = perm
@@ -77,30 +69,28 @@ let refine perm = perm
 *)
 
 (*Finds some isomorphism between matA and matB returns a Some iso on success*)
+(*matA, matB are adjacency matricies*)
 let ullmann_find perm matA matB =
-  let lastRow = to_int (Mat.dim1 matA) in
-  let lastCol = to_int (Mat.dim1 matB) in
-  let rec aux freeVert perm currentRow currentColumn =
-    let perm = refine perm in
-    if currentRow = lastRow && isIso perm matA matB then Some perm
-    else if currentColumn = lastCol then None
-    else if freeVert.(currentColumn) then
-      aux freeVert perm currentRow (currentColumn + 1)
-    else
-      let perm = Mat.copy perm in
-      let () =
-        Mat.replace_alli perm (fun i j a ->
-            match (i, j, a) with
-            | i, j, _ when i = currentRow + 1 && j = currentColumn + 1 -> 1.0
-            | i, _, _ when i = currentRow + 1 -> 0.0
-            | _, _, a -> a)
-      in
-      (*We are now in the for loop*)
-      (*Mark c as used*)
-      let freeVert = setImmut freeVert currentColumn true in
-      aux freeVert perm (currentRow + 1) currentColumn
-  in
-  aux (Array.create ~len:lastCol false) perm 0 0
+  if is_empty matA then Some perm
+  else if is_empty matB then None
+  else
+    let lastRow = Array.length matA in
+    let lastCol = Array.length matB in
+    let rec aux freeVert perm currentRow currentColumn =
+      let perm = refine perm in
+      if currentRow = lastRow && isIso perm matA matB then Some perm
+      else if currentColumn = lastCol then None
+      else if freeVert.(currentColumn) then
+        aux freeVert perm currentRow (currentColumn + 1)
+      else
+        let perm = copy perm in
+        let () = update_rowi perm currentRow (fun j _ -> j = currentColumn) in
+        (*We are now in the for loop*)
+        (*Mark c as used*)
+        let freeVert = setImmut freeVert currentColumn true in
+        aux freeVert perm (currentRow + 1) currentColumn
+    in
+    aux (Array.create ~len:lastCol false) perm 0 0
 
 let find_sub_iso idg1 idg2 =
   let ( >>= ) = Option.( >>= ) in
@@ -110,11 +100,9 @@ let find_sub_iso idg1 idg2 =
   if (*We want empty graphs to be trivial subgraphs*)
      l1 > l2 then None
   else
-    let module Dim1 = (val of_int_dyn l1 : SIZE) in
-    let module Dim2 = (val of_int_dyn l2 : SIZE) in
-    let m0 = genInitialPerm idg1 idg2 Dim1.value Dim2.value in
-    let adj1 = adj_mat idg1 Dim1.value in
-    let adj2 = adj_mat idg2 Dim2.value in
+    let m0 = genInitialPerm idg1 idg2 l1 l2 in
+    let adj1 = adj_mat idg1 in
+    let adj2 = adj_mat idg2 in
     ullmann_find m0 adj1 adj2 >>= fun perm ->
     return (permToAssoc idg1 idg2 perm)
 

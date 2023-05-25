@@ -36,7 +36,7 @@ let from_map ?directed map =
         []
       else
         let id, id_neighbours = Map.min_elt_exn map in
-        let new_imap = 
+        let new_imap =
           if Util.resolve directed then Map.remove map id else remove_id id map
         in
         let new_edges = Set.fold id_neighbours
@@ -52,14 +52,14 @@ let from_map ?directed map =
 let tree_from_condensed ?directed (graph : Graph.graph) state =
   let () = assert(Set.length graph.nodes <= 1) in
   match Set.choose graph.nodes with
-    | None -> None 
+    | None -> None
     | Some root ->
       let rec tree_from_id id (state : Graph.state) =
         let vertex : Graph.vertex = Hashtbl.find_exn state.id_map id in
         match vertex.connective with
         | Graph.Atom atom -> {connective = Atom atom; id = vertex.id}
 
-        | Graph.Tensor iset -> 
+        | Graph.Tensor iset ->
           let tree_list = trees_from_id_list (Set.elements iset) state in
           let tensor_lists, tree_list = List.partition_map tree_list ~f:(fun t ->
             match t.connective with
@@ -82,7 +82,7 @@ let tree_from_condensed ?directed (graph : Graph.graph) state =
         | Graph.Before ilist ->
           let tree_list = trees_from_id_list ilist state in
           let rec parse_before tl =
-            match tl with 
+            match tl with
             | [] -> []
             | h :: t ->
               match h.connective with
@@ -103,8 +103,8 @@ let tree_from_condensed ?directed (graph : Graph.graph) state =
       Some (tree_from_id root.id state)
 
 (** [tree_to_graph ?directed tree] converts a tree to a graph, using [directed] to specify if the tree is directed *)
-let tree_to_graph ?directed tree = 
-  let join_sets ?symmetric vs1 vs2 = 
+let tree_to_graph ?directed tree =
+  let join_sets ?symmetric vs1 vs2 =
     Set.fold vs1 ~init:([]) ~f:(fun li vi ->
       Set.fold vs2 ~init:(li) ~f:(fun lj vj ->
         match symmetric with
@@ -112,9 +112,9 @@ let tree_to_graph ?directed tree =
         | Some bool -> if bool then (vi, vj) :: (vj, vi) :: lj else
           (vi, vj) :: lj))
   in
-  let rec tree_to_graph_r tree = 
+  let rec tree_to_graph_r tree =
     match tree.connective with
-    | Atom atom -> 
+    | Atom atom ->
       let node = Set.singleton (module Graph.Vertex) {connective=Atom atom; id=tree.id} in
       (node, [])
 
@@ -123,7 +123,7 @@ let tree_to_graph ?directed tree =
         ~f:(fun (vset, el) t ->
           let nodes, el_to_add = tree_to_graph_r t in
           (Set.union vset nodes, el_to_add @ el))
-      in 
+      in
       (nodes, edges)
 
     | Tensor tl ->
@@ -136,7 +136,7 @@ let tree_to_graph ?directed tree =
           vertices, edges @ edge_base)
       in
       nodes, edges
-    
+
     | Before tl ->
       let nel = List.map tl ~f:(tree_to_graph_r) in
       let nodes, edges = List.fold nel ~init:(Set.empty (module Graph.Vertex), [])
@@ -168,3 +168,9 @@ let tree_to_graph ?directed tree =
   let vertices, edges = tree_to_graph_r tree in
   let edges, edges_from = Graph.edge_maps ?directed edges in
   {Graph.nodes = vertices; edges = edges; edges_from = edges_from}
+
+let tree_from_graph (graph: Graph.graph) =
+  let max_id = Base.Set.fold graph.nodes ~init:0 ~f:(fun acc n -> max acc n.id) in
+  let state =  {Graph.total_vertices=max_id; id_map=Base.Hashtbl.create (module Base.Int)} in
+  let condensed = Condense.process graph state in
+  tree_from_condensed condensed state

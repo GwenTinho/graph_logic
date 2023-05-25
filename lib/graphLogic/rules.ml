@@ -14,18 +14,20 @@ let find_fitting_pair lst comp =
   in
   aux lst lst
 
-
 let is_atom tree = match tree with Atom _ -> true | _ -> false
 let find_dual_pair trees = find_fitting_pair trees Equality.is_dual
 
 let find_atomic_dual_pair trees =
-  let pair_opt = find_fitting_pair trees (fun t1 t2 ->
-      match (t1, t2) with
-      | Atom a, Atom b -> Equality.is_dual_atom a b
-      | _ -> false) in
+  let pair_opt =
+    find_fitting_pair trees (fun t1 t2 ->
+        match (t1, t2) with
+        | Atom a, Atom b -> Equality.is_dual_atom a b
+        | _ -> false)
+  in
   match pair_opt with
   | None -> None
-  | Some (Atom a,Atom b) -> if Equality.is_dual_atom a b then Some (a, b) else None
+  | Some (Atom a, Atom b) ->
+      if Equality.is_dual_atom a b then Some (a, b) else None
   | _ -> None
 
 let propagate_once f tree =
@@ -45,12 +47,17 @@ let rec atomic_identity_down (tree : ltree) =
         | None -> propagate_once atomic_identity_down tree
         | Some (a, b) ->
             Par
-              (List.filter nodes ~f:(function Atom n -> not (Equality.equal_atom n a || Equality.equal_atom n b) | _ -> false)
-                   )
+              (List.filter nodes ~f:(function
+                | Atom n ->
+                    not (Equality.equal_atom n a || Equality.equal_atom n b)
+                | _ -> false))
       in
-      if LogicalTree.count_nodes new_tree = LogicalTree.count_nodes tree then tree
+      if LogicalTree.count_nodes new_tree = LogicalTree.count_nodes tree then
+        tree
       else atomic_identity_down new_tree
   | _ -> propagate_once atomic_identity_down tree
+
+(*atomic identity up - ai_up*)
 
 (*Switch par implementation*)
 (*P(M1,...,Mn) & N -> P(M1,...,Mi & N,...,Mn) *)
