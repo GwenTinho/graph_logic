@@ -1,9 +1,9 @@
 import { TreeNodeData } from './TreeNodeData.js';
 
 class TreeNode {
-    constructor(nodeData, successors) {
+    constructor(nodeData) {
         this.nodeData = nodeData;
-        this.successors = successors;
+        this.successors = [];
     }
 
     // returns true if the node was added, false otherwise
@@ -18,6 +18,7 @@ class TreeNode {
             index++;
         }
         // insert the new node at that index
+        node.nodeData.isRoot = false;
         this.successors.splice(index, 0, node);
         return true;
     }

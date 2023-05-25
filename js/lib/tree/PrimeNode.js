@@ -1,8 +1,8 @@
 import TreeNode from "./TreeNode.js";
 
 class PrimeNode extends TreeNode {
-    constructor(nodeData, successors) {
-        super(nodeData, successors);
+    constructor(nodeData) {
+        super(nodeData);
         if (this.nodeData.label !== "prime") throw "Cannot make a PrimeNode with a non-prime nodeData";
 
     }
