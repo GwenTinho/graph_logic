@@ -1,5 +1,0 @@
-(library
- (name interface)
- (preprocess
-  (pps js_of_ocaml-ppx))
- (libraries quartic js_of_ocaml base logic))

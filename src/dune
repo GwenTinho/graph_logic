@@ -3,4 +3,4 @@
  (modes js)
  (preprocess
   (pps js_of_ocaml-ppx))
- (libraries interface js_of_ocaml base))
+ (libraries js_of_ocaml base quartic logic))
