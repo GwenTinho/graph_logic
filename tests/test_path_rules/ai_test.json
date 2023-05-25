@@ -1,0 +1,15 @@
+{
+    "connective": "par",
+    "successors": [
+        {
+            "connective": "atom",
+            "label": "a",
+            "polarisation": true
+        },
+        {
+            "connective": "atom",
+            "label": "a",
+            "polarisation": false
+        }
+    ]
+}
