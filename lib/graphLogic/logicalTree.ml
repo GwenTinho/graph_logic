@@ -81,6 +81,7 @@ let traverse_by_path tree path =
   aux tree path
 
 let map_at_path tree path ~f =
+  let* path_part_from_head = Base.List.tl path in
   let rec aux tree path =
     match path with
     | [] -> f tree
@@ -109,4 +110,4 @@ let map_at_path tree path ~f =
         in
         Some updated_tree
   in
-  aux tree path
+  aux tree path_part_from_head
