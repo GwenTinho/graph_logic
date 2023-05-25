@@ -1,5 +1,5 @@
 .cy {
-    height: 70vh;
+    height: 50vh;
     width: 35vw;
     position: relative;
     background-color: lightgrey;
@@ -10,6 +10,25 @@
     display: flex;
     width: 100vw;
     justify-content: space-around;
+}
+
+.styled-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1095c1;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.styled-link:hover {
+    background-color: #1ab3e6;
 }
 
 .row {
@@ -53,5 +72,80 @@ button {
 }
 
 .grid {
-    align-items: center;
+    align-items: flex-start;
+    /* Change to align items to the top */
+    margin-top: 10px;
+    /* Adjust the top margin to bring the buttons closer to the top */
+}
+
+.rule-history {
+    /* ...existing rule-history styles... */
+    margin-top: 0;
+    margin-left: 10px;
+}
+
+#history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#history-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    /* Add border-radius property */
+}
+
+#history-table th,
+#history-table td {
+    padding: 8px;
+}
+
+#history-table th {
+    background-color: #1095c1;
+    text-align: left;
+}
+
+#history-body tr:nth-child(even) {
+    background-color: #1186c9;
+    /* Update to a slightly deeper blue color */
+}
+
+#history-body tr:nth-child(odd) {
+    background-color: #1095c1;
+    /* Update to a lighter blue color */
+}
+
+#history-body tr:nth-child(even) td:nth-child(2) {
+    background-color: #1186c9;
+}
+
+#history-body tr:nth-child(odd) td:nth-child(2) {
+    background-color: #1095c1;
+    /* Use the same background color as the corresponding row */
+}
+
+#history-body .history-row td {
+    padding: 8px;
+    background-color: #fff;
+    color: #000;
+}
+
+#history-table th {
+    background-color: #1095c1;
+    text-align: left;
+    color: #fff;
+    /* Add text color */
+    padding: 10px;
+    /* Increase padding for better readability */
+}
+
+#history-table th:first-child {
+    border-top-left-radius: 10px;
+    /* Add border-radius to the top left corner */
+}
+
+#history-table th:last-child {
+    border-top-right-radius: 10px;
+    /* Add border-radius to the top right corner */
 }

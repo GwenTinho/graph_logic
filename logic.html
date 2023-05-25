@@ -36,13 +36,21 @@
 
     <section>
         <div id="layout">
-            <a href="index.html">index</a>
             <div class="col">
+                <a href="index.html" class="styled-link">Go to Index</a>
                 <div class="rule-history">
                     <h3>History</h3>
-                    <ul id="history">
-
-                    </ul>
+                    <table id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Rule Applied</th>
+                                <th>IDs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                            <!-- Table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="col">
@@ -82,6 +90,9 @@
                     <h3>Rule Selection</h3>
                     <div class="col">
                         <button type="button" id="ai">AI</button>
+                        <button type="button" id="pathAtom1" style="display: none;">Atom </button>
+                        <button type="button" id="pathAtom2" style="display: none;">Atom </button>
+                        <button type="button" id="pathPar" style="display: none;">Par </button>
                         <button type="button" id="spar">S&</button>
                         <button type="button" id="prime">Prime</button>
                     </div>

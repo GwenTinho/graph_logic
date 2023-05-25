@@ -1,4 +1,3 @@
-const history = [];
 
 // check if tree is valid before a proof TODO
 function isValid(tree) {
@@ -23,23 +22,29 @@ function isValid(tree) {
 
 function handleAi(tree) {
     if (!isValid(tree)) return;
-    // TODO
+    ruleHistory.push("ai");
+    const pathAtom1 = document.getElementById("pathAtom1");
+    const pathAtom2 = document.getElementById("pathAtom2");
+    const pathAtom3 = document.getElementById("pathPar");
+    pathAtom1.style.display = "inline-block";
+    pathAtom2.style.display = "inline-block";
+    pathAtom3.style.display = "inline-block";
 }
 
 function handleSPar(tree) {
     if (!isValid(tree)) return;
-    history.push("spar");
-    const ul = document.getElementById("history");
-    const li = document.createElement("li");
+    ruleHistory.push("spar");
+    const ul = document.getElementById("history-body");
+    const li = document.createElement("tr");
     li.appendChild(document.createTextNode("spar"));
     ul.appendChild(li);
 }
 
 function handlePrime(tree) {
     if (!isValid(tree)) return;
-    history.push("prime");
-    const ul = document.getElementById("history");
-    const li = document.createElement("li");
+    ruleHistory.push("prime");
+    const ul = document.getElementById("history-body");
+    const li = document.createElement("tr");
     li.appendChild(document.createTextNode("prime"));
     ul.appendChild(li);
 }
