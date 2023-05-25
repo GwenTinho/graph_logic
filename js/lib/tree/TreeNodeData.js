@@ -17,7 +17,7 @@ function toClass(string) {
 }
 
 class TreeNodeData {
-    constructor(label, x, y, polarisation, id) {
+    constructor(label, x, y, polarisation, id, isRoot = false) {
         if (!isValidLabel(label)) {
             throw "Invalid label";
         }
@@ -26,8 +26,8 @@ class TreeNodeData {
         this.id = id;
 
         this.class = toClass(label);
-        this.added = null;
         this.canHaveChildren = false;
+        this.isRoot = isRoot;
 
         switch (label) {
             case "&":
@@ -71,12 +71,13 @@ class TreeNodeData {
                     y: this.y,
                 },
             };
-            this.added = cy.add(contextNode);
-            cy.changes.push(["add", this.added]);
-            this.added.addClass(this.class);
+            const added = cy.add(contextNode);
+
+            cy.changes.push(["add", added]);
+            added.addClass(this.class);
 
             this.graph.render(cy);
-            return this.added;
+            return added;
         }
 
         const node = {
@@ -91,18 +92,11 @@ class TreeNodeData {
                 y: this.y,
             },
         };
-        this.added = cy.add(node);
-        cy.changes.push(["add", this.added]);
-        this.added.addClass(this.class);
-        return this.added;
-    }
-
-    addClass(className) {
-        this.added.addClass(className);
-    }
-
-    removeClass(className) {
-        this.added.removeClass(className);
+        const added = cy.add(node);
+        cy.changes.push(["add", added]);
+        added.addClass(this.class);
+        if (this.isRoot) added.addClass("root");
+        return added;
     }
 
     negate() {
@@ -115,30 +109,25 @@ class TreeNodeData {
             case "⅋":
                 return {
                     connective: "par",
-                    id: this.id,
                 };
             case "⊗":
                 return {
                     connective: "tensor",
-                    id: this.id,
                 };
             case "prime":
                 return {
                     connective: "prime",
                     graph: this.graph.serialize(),
-                    id: this.id,
                 };
             case "before":
                 return {
                     connective: "before",
-                    id: this.id,
                 };
             default:
                 return {
                     connective: "atom",
                     label: this.label,
                     polarisation: this.polarisation,
-                    id: this.id,
                 };
         }
     }

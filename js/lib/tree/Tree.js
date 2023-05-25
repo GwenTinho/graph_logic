@@ -10,11 +10,11 @@ class Tree {
     }
 
     addNode(label, x, y, polarisation) {
-        let data = new TreeNodeData(label, x, y, polarisation, this.maxId);
+        let data = new TreeNodeData(label, x, y, polarisation, this.maxId, true);
 
-        let node = new TreeNode(data, []);
+        let node = new TreeNode(data);
         if (label === "^") {
-            node = new PrimeNode(data, []);
+            node = new PrimeNode(data);
         }
 
 
@@ -128,10 +128,7 @@ class Tree {
         clearGraph(cy);
 
         for (const root of this.roots) {
-            root.nodeData.added?.removeClass("root");
             root.render(cy);
-            root.nodeData.added.addClass("root");
-
         }
 
         cleanLayout(cy);
