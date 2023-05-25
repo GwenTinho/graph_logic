@@ -12,15 +12,6 @@ class TreeNode {
             return false;
         }
 
-        if (this.nodeData.label == "^") {
-            const { x, y, id } = node.nodeData;
-            this.nodeData.graph.addNode(x, y, id);
-            // TODO
-        }
-
-        // the successors are sorted by id to make binary search possible
-        // we can use this to insert the new node in the correct position
-
         // find the index of the first successor with a higher id
         let index = 0;
         while (index < this.successors.length && this.successors[index].nodeData.id < node.nodeData.id) {
@@ -120,8 +111,8 @@ class TreeNode {
 
     render(cy) {
         const to_add = [];
-
         this.nodeData.render(cy);
+
         for (const successor of this.successors) {
             successor.render(cy);
             to_add.push({

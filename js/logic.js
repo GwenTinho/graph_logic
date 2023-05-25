@@ -9,6 +9,7 @@ import Tree from "./lib/tree/Tree.js";
 // Initialise global variables
 
 window.tree = new Tree();
+window.ruleHistory = [];
 
 window.cy = cytoscape({
     container: document.getElementById('cy'),

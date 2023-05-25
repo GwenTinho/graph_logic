@@ -42,7 +42,7 @@ class TreeNodeData {
                 break;
             case "^":
                 this.label = "prime";
-                this.graph = new IdGraph();
+                this.graph = new IdGraph(this.id);
                 this.canHaveChildren = true;
                 this.polarisation = true;
                 break;
@@ -59,6 +59,26 @@ class TreeNodeData {
     }
 
     render(cy) {
+        if (this.label == "prime") {
+            const contextNode = {
+                group: 'nodes',
+                data: {
+                    id: this.id,
+                    label: "",
+                },
+                renderedPosition: {
+                    x: this.x,
+                    y: this.y,
+                },
+            };
+            this.added = cy.add(contextNode);
+            cy.changes.push(["add", this.added]);
+            this.added.addClass(this.class);
+
+            this.graph.render(cy);
+            return this.added;
+        }
+
         const node = {
             group: 'nodes',
             data: {

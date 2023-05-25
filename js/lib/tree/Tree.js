@@ -1,3 +1,5 @@
+import { cleanLayout, clearGraph } from '../util/helper.js';
+import PrimeNode from './PrimeNode.js';
 import TreeNode from './TreeNode.js';
 import { TreeNodeData } from './TreeNodeData.js';
 
@@ -9,7 +11,13 @@ class Tree {
 
     addNode(label, x, y, polarisation) {
         let data = new TreeNodeData(label, x, y, polarisation, this.maxId);
-        const node = new TreeNode(data, []);
+
+        let node = new TreeNode(data, []);
+        if (label === "^") {
+            node = new PrimeNode(data, []);
+        }
+
+
         this.maxId++;
 
         if (this.roots.length === 0) {
@@ -17,21 +25,9 @@ class Tree {
             return;
         }
         this.roots.push(node);
+        return this.maxId - 1;
     }
 
-    addPrimeNode(x, y) {
-        let data = new TreeNodeData("^", x, y, undefined, this.maxId);
-        const node = new TreeNode(data, []);
-        this.maxId++;
-
-        data.graph.addNode(x, y, this.maxId);
-
-        if (!this.roots?.length) {
-            this.roots = [node];
-            return;
-        }
-        this.roots.push(node);
-    }
 
     connectPrimeNode(id1, id2) {
         const node1 = this.getNode(id1);
@@ -44,11 +40,11 @@ class Tree {
     }
 
 
-    connectRoots(id1, id2) {
+    connectRootToNode(id1, id2) {
         if (id1 == id2) {
             return;
         }
-        const node1 = this.getRoot(id1);
+        const node1 = this.getNode(id1);
         const node2idx = this.getRootIndex(id2);
         if (node1) {
             const node2 = this.roots[node2idx];
@@ -129,13 +125,16 @@ class Tree {
     }
 
     render(cy) {
+        clearGraph(cy);
 
         for (const root of this.roots) {
-            const renderv = root.nodeData.render(cy);
-            renderv.addClass("root");
+            root.nodeData.added?.removeClass("root");
             root.render(cy);
-            renderv.removeClass("root");
+            root.nodeData.added.addClass("root");
+
         }
+
+        cleanLayout(cy);
     }
 
     isConnected() {

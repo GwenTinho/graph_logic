@@ -1,9 +1,14 @@
 // implementation of index graphs
 
 class IdGraph {
-    constructor() {
+    constructor(id) {
         this.nodes = {};
         this.adjacency = {};
+        this.parentId = id;
+    }
+
+    isEmpty() {
+        return Object.keys(this.nodes).length == 0;
     }
 
     addNode(x, y, id) {
@@ -21,14 +26,18 @@ class IdGraph {
     }
 
     render(cy) {
-        // redo render using new format
+
+        // first render all nodes
         for (const id in this.nodes) {
             const { x, y } = this.nodes[id];
+
+
             const node = {
                 group: 'nodes',
                 data: {
                     id: id + "prime-representative",
-                    label: ""
+                    label: "",
+                    parent: this.parentId,
                 },
                 renderedPosition: {
                     x: x,
@@ -38,17 +47,20 @@ class IdGraph {
             const added = cy.add(node);
             cy.changes.push(["add", added]);
             added.addClass('inCompound');
+        }
 
+        // then render all edges
+        for (const id in this.adjacency) {
             for (const target of this.adjacency[id]) {
-                const edge = {
+                const innerEdge = {
                     data: {
                         source: id + "prime-representative",
                         target: target + "prime-representative",
                     },
                 };
-                const added = cy.add(edge);
+                const added = cy.add(innerEdge);
                 cy.changes.push(["add", added]);
-                added.addClass('compoundOut');
+                added.addClass('compoundIn');
             }
         }
     }
