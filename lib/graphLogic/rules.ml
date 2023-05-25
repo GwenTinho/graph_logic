@@ -5,8 +5,6 @@ open Base
 
 (*Inference rules*)
 
-let ( let* ) o f = match o with None -> None | Some x -> f x
-
 let find_fitting_pair lst comp =
   let rec aux rem1 rem2 =
     match (rem1, rem2) with
@@ -58,39 +56,6 @@ let rec atomic_identity_down (tree : ltree) =
         tree
       else atomic_identity_down new_tree
   | _ -> propagate_once atomic_identity_down tree
-
-let atomic_identity_down_paths (tree : ltree) (pathAtom1 : int list)
-    (pathAtom2 : int list) (pathPar : int list) =
-  (*If the atom paths dont coincide up to the last node return none *)
-  if List.length pathAtom1 <> List.length pathAtom2 then None
-  else
-    let pathAtom1 = List.rev pathAtom1 in
-    let pathAtom2 = List.rev pathAtom2 in
-    let* pathFromLast1 = List.tl pathAtom1 in
-    let* pathFromLast2 = List.tl pathAtom2 in
-    let different = List.exists2 pathFromLast1 pathFromLast2 ~f:( = ) in
-    let different =
-      match different with Ok res -> res | Unequal_lengths -> true
-    in
-    if different then None
-    else
-      LogicalTree.map_at_path tree pathPar ~f:(fun p ->
-          match p with
-          | Par nodes -> (
-              let* idx1 = List.rev pathAtom1 |> List.hd in
-              let* idx2 = List.rev pathAtom2 |> List.hd in
-              let* a = List.nth nodes idx1 in
-              let* b = List.nth nodes idx2 in
-              match (a, b) with
-              | Atom a, Atom b ->
-                  if Equality.is_dual_atom a b then
-                    Some
-                      (Par
-                         (List.filteri nodes ~f:(fun i _ ->
-                              i <> idx1 && i <> idx2)))
-                  else None
-              | _ -> None)
-          | _ -> None)
 
 (*atomic identity up - ai_up*)
 

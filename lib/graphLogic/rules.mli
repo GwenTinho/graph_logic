@@ -1,12 +1,5 @@
 val atomic_identity_down : LogicalTree.ltree -> LogicalTree.ltree
 
-val atomic_identity_down_paths :
-  LogicalTree.ltree ->
-  int list ->
-  int list ->
-  int list ->
-  LogicalTree.ltree option
-
 type selector = LogicalTree.ltree list -> int
 
 val switch_par_generic :
