@@ -1,9 +1,9 @@
 import { TreeNodeData } from './TreeNodeData.js';
 
 class TreeNode {
-    constructor(nodeData) {
+    constructor(nodeData, successors = []) {
         this.nodeData = nodeData;
-        this.successors = [];
+        this.successors = successors;
     }
 
     // returns true if the node was added, false otherwise
@@ -21,6 +21,21 @@ class TreeNode {
         node.nodeData.isRoot = false;
         this.successors.splice(index, 0, node);
         return true;
+    }
+
+    // implement duplicate
+    duplicate(maxId) {
+        // we need to keep new ids unique
+        // so we need to find the max id in the tree
+        // and then add 1 to it
+        const subtreeMaxId = this.findMaxId();
+
+        const nodeData = this.nodeData.duplicate(subtreeMaxId + maxId + 1);
+        const successors = [];
+        for (const successor of this.successors) {
+            successors.push(successor.duplicate(subtreeMaxId + maxId + 1));
+        }
+        return new TreeNode(nodeData, successors);
     }
 
     getNode(id) {
@@ -69,8 +84,8 @@ class TreeNode {
         for (let i = 0; i < this.successors.length; i++) {
             const successor = this.successors[i];
             const path = successor.getPath(id);
-            if (path != null) {
-                path.push(i);
+            if (path !== undefined) {
+                path.unshift(i);
                 return path;
             }
         }
@@ -78,6 +93,9 @@ class TreeNode {
 
     negate() {
         this.nodeData.negate();
+        for (const successor of this.successors) {
+            successor.negate();
+        }
     }
 
 
@@ -101,11 +119,12 @@ class TreeNode {
         return out;
     }
 
-    static deserialize(serialized) {
-        const nodeData = TreeNodeData.deserialize(serialized);
+    static deserialize(data, id = 0) {
+        const nodeData = TreeNodeData.deserialize(data, id);
         const successors = [];
-        for (const successor of serialized.successors) {
-            successors.push(TreeNode.deserialize(successor));
+        if (!nodeData.canHaveChildren) return new TreeNode(nodeData);
+        for (const successor of data.successors) {
+            successors.push(TreeNode.deserialize(successor, ++id));
         }
         return new TreeNode(nodeData, successors);
     }

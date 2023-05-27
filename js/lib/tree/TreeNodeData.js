@@ -28,38 +28,49 @@ class TreeNodeData {
         this.class = toClass(label);
         this.canHaveChildren = false;
         this.isRoot = isRoot;
+        this.label = label;
 
         switch (label) {
             case "&":
-                this.label = "⅋";
+                this.shownLabel = "⅋";
                 this.canHaveChildren = true;
                 this.polarisation = true;
                 break;
             case "*":
-                this.label = "⊗";
+                this.shownLabel = "⊗";
                 this.canHaveChildren = true;
                 this.polarisation = true;
                 break;
             case "^":
-                this.label = "prime";
+                this.shownLabel = "prime";
                 this.graph = new IdGraph(this.id);
                 this.canHaveChildren = true;
                 this.polarisation = true;
                 break;
             case ">":
-                this.label = "before";
+                this.shownLabel = "before";
                 this.canHaveChildren = true;
                 this.polarisation = true;
                 break;
             default:
-                this.label = label;
+                this.shownLabel = label;
                 this.polarisation = polarisation;
                 break;
         }
     }
 
+    duplicate(maxId) {
+        if (this.class == "prime") {
+            const idgData = new TreeNodeData("^", this.x, this.y, this.polarisation, maxId, this.isRoot);
+            idgData.graph = this.graph.duplicate(maxId);
+            return idgData;
+        }
+
+        return new TreeNodeData(this.label, this.x, this.y, this.polarisation, maxId, this.isRoot);
+    }
+
     render(cy) {
-        if (this.label == "prime") {
+        if (this.class === "prime") {
             const contextNode = {
                 group: 'nodes',
                 data: {
@@ -84,7 +95,7 @@ class TreeNodeData {
             group: 'nodes',
             data: {
                 id: this.id,
-                label: this.label,
+                label: this.shownLabel,
                 polarisation: this.polarisation,
             },
             renderedPosition: {
@@ -105,12 +116,12 @@ class TreeNodeData {
 
 
     serialize() {
-        switch (this.label) {
-            case "⅋":
+        switch (this.class) {
+            case "par":
                 return {
                     connective: "par",
                 };
-            case "⊗":
+            case "tensor":
                 return {
                     connective: "tensor",
                 };
@@ -132,20 +143,20 @@ class TreeNodeData {
         }
     }
 
-    static deserialize(serialized) {
-        switch (serialized.connective) {
+    static deserialize(data, id) {
+        switch (data.connective) {
             case "par":
-                return new TreeNodeData("&", 0, 0, true, serialized.id);
+                return new TreeNodeData("&", 0, 0, true, id);
             case "tensor":
-                return new TreeNodeData("*", 0, 0, true, serialized.id);
+                return new TreeNodeData("*", 0, 0, true, id);
             case "prime":
-                const data = new TreeNodeData("^", 0, 0, true, serialized.id);
-                data.graph = IdGraph.deserialize(serialized.graph);
-                return data;
+                const idgData = new TreeNodeData("^", 0, 0, true, id);
+                idgData.graph = IdGraph.deserialize(data.graph);
+                return idgData;
             case "before":
-                return new TreeNodeData(">", 0, 0, true, serialized.id);
+                return new TreeNodeData(">", 0, 0, true, id);
             default:
-                return new TreeNodeData(serialized.label, 0, 0, serialized.polarisation, serialized.id);
+                return new TreeNodeData(data.label, 0, 0, data.polarisation, id);
         }
     }
 }

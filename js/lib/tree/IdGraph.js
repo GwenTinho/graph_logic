@@ -21,8 +21,25 @@ class IdGraph {
         //this.adjacency[id2].push(id1); undirected edges
     }
 
+    duplicate(newParentId) {
+        const graph = new IdGraph(newParentId);
+        for (const id in this.nodes) {
+            graph.addNode(this.nodes[id].x, this.nodes[id].y, id);
+        }
+
+        for (const id in this.adjacency) {
+            for (const target of this.adjacency[id]) {
+                graph.addEdge(id, target);
+            }
+        }
+
+        return graph;
+    }
+
     isValid() {
         // check if graph is a prime graph
+
+        return isPrime(this.serialize());
     }
 
     render(cy) {
@@ -35,7 +52,7 @@ class IdGraph {
             const node = {
                 group: 'nodes',
                 data: {
-                    id: id + "prime-representative",
+                    id: (this.parentId + parseInt(id)) + "prime-representative",
                     label: "",
                     parent: this.parentId,
                 },
@@ -54,8 +71,8 @@ class IdGraph {
             for (const target of this.adjacency[id]) {
                 const innerEdge = {
                     data: {
-                        source: id + "prime-representative",
-                        target: target + "prime-representative",
+                        source: (this.parentId + parseInt(id)) + "prime-representative",
+                        target: (this.parentId + parseInt(target)) + "prime-representative",
                     },
                 };
                 const added = cy.add(innerEdge);
@@ -66,11 +83,38 @@ class IdGraph {
     }
 
     serialize() {
-        // TODO
+        // serialize as a list of nodes and a list of edges
+        const nodes = [];
+        const edges = [];
+        for (const id in this.nodes) {
+            nodes.push(id);
+        }
+
+        for (const id in this.adjacency) {
+            for (const target of this.adjacency[id]) {
+                edges.push([id, target]);
+            }
+        }
+
+        return {
+            nodes: nodes,
+            edges: edges,
+        };
     }
 
-    static deserialize() {
-        // TODO
+    static deserialize(data) {
+        // deserialize from a list of nodes and a list of edges
+
+        const graph = new IdGraph();
+        for (const node of data.nodes) {
+            graph.addNode(0, 0, node.id);
+        }
+
+        for (const edge of data.edges) {
+            graph.addEdge(edge[0], edge[1]);
+        }
+
+        return graph;
     }
 }
 
