@@ -24,7 +24,7 @@ let compare_paths_up_to_last (path1 : path) (path2 : path) =
     let* last2 = List.hd path2 in
     Some (last1, last2)
 
-let atomic_identity_down_paths (tree : ltree) pathAtom1 pathAtom2 pathPar =
+let atomic_identity_down_paths (tree : ltree) pathPar pathAtom1 pathAtom2 =
   (*If the atom paths dont coincide up to the last node return none *)
   LogicalTree.map_at_path tree pathPar ~f:(function
     | Par nodes -> (
@@ -40,7 +40,7 @@ let atomic_identity_down_paths (tree : ltree) pathAtom1 pathAtom2 pathPar =
         | _ -> None)
     | _ -> None)
 
-let prime_down_paths (tree : ltree) pathPrime1 pathPrime2 pathPar : ltree option
+let prime_down_paths (tree : ltree) pathPar pathPrime1 pathPrime2 : ltree option
     =
   LogicalTree.map_at_path tree pathPar ~f:(function
     | Par nodes -> (
@@ -57,7 +57,7 @@ let prime_down_paths (tree : ltree) pathPrime1 pathPrime2 pathPar : ltree option
         | _ -> None)
     | _ -> None)
 
-let switch_par (tree : ltree) pathOutside pathPrime indexInPrime pathPar =
+let switch_par (tree : ltree) pathPar pathOutside pathPrime pathPrimeSubnode =
   LogicalTree.map_at_path tree pathPar ~f:(function
     | Par nodes -> (
         let* idxOutside, idxPrime =
@@ -65,22 +65,28 @@ let switch_par (tree : ltree) pathOutside pathPrime indexInPrime pathPar =
         in
         let* outside = List.nth nodes idxOutside in
         let* prime = List.nth nodes idxPrime in
-        match prime with
-        | Prime (idg, succ) ->
-            let* inside = List.nth succ indexInPrime in
-            let combined = Par [ outside; inside ] in
-            let new_succ =
-              List.mapi succ ~f:(fun i v ->
-                  if i <> indexInPrime then v else combined)
-            in
-            Some (Prime (idg, new_succ))
-        | Tensor succ ->
-            let* inside = List.nth succ indexInPrime in
-            let combined = Par [ outside; inside ] in
-            let new_succ =
-              List.mapi succ ~f:(fun i v ->
-                  if i <> indexInPrime then v else combined)
-            in
-            Some (Tensor new_succ)
-        | _ -> None)
+        let revSubnode = List.rev pathPrimeSubnode in
+        let revPrime = List.rev pathPrime in
+        let* revSubnodetl = List.tl revSubnode in
+        if not (equal_list ( = ) revPrime revSubnodetl) then None
+        else
+          let* indexInPrime = List.hd revSubnode in
+          match prime with
+          | Prime (idg, succ) ->
+              let* inside = List.nth succ indexInPrime in
+              let combined = Par [ outside; inside ] in
+              let new_succ =
+                List.mapi succ ~f:(fun i v ->
+                    if i <> indexInPrime then v else combined)
+              in
+              Some (Prime (idg, new_succ))
+          | Tensor succ ->
+              let* inside = List.nth succ indexInPrime in
+              let combined = Par [ outside; inside ] in
+              let new_succ =
+                List.mapi succ ~f:(fun i v ->
+                    if i <> indexInPrime then v else combined)
+              in
+              Some (Tensor new_succ)
+          | _ -> None)
     | _ -> None)
