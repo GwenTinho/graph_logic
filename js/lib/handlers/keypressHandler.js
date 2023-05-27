@@ -1,3 +1,5 @@
+import { isValidLabel } from "../util/helper.js";
+
 function handleKeyPress(cy, mousePosition, tree, evt) {
     if (evt.key == "Shift") return;
 
@@ -11,6 +13,8 @@ function handleKeyPress(cy, mousePosition, tree, evt) {
     }
 
     const string = evt.key;
+
+    if (!isValidLabel(string)) return;
 
     const selected = cy.nodes(':selected');
 

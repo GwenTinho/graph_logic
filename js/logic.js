@@ -1,7 +1,7 @@
 import { handleClick } from "./lib/handlers/clickHandler.js";
-import { cleanLayout, clearGraph, exportTree, undo } from "./lib/util/helper.js";
+import { cleanLayout, clearGraph, duplicateHandler, exportTree, undo } from "./lib/util/helper.js";
 import { handleKeyPress } from "./lib/handlers/keypressHandler.js";
-import { handleAi, handlePrime, handleRuleClick, handleSPar } from "./lib/handlers/ruleHandlers.js";
+import { handleAi, handlePrime, handleRuleClick, handleSPar, handleSimplify } from "./lib/handlers/ruleHandlers.js";
 import { style } from "./lib/util/style.js";
 import Tree from "./lib/tree/Tree.js";
 import RuleHistory from "./lib/proof/RuleHistory.js";
@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", event => {
     document.getElementById('upload').addEventListener('change', async evt => {
         try {
             let content = await evt?.target?.files[0]?.text();
-            window.tree = Tree.deserialize(JSON.parse(content));
+            window.tree.addNodeFromJson(content);
+            window.tree.render(cy);
             cleanLayout(cy);
         }
         catch (err) {
@@ -55,12 +56,44 @@ cy_div.addEventListener("mouseover", evt => {
     isMouseOver = true;
 });
 
+document.addEventListener('keydown', evt => {
+
+    if (evt.ctrlKey && evt.key == "z") {
+        evt.preventDefault();
+        undo(cy);
+        return;
+    }
+
+    if (evt.ctrlKey && evt.key == "s") {
+        evt.preventDefault();
+        exportTree(tree);
+        return;
+    }
+
+    if (evt.ctrlKey && evt.key == "d") {
+        evt.preventDefault();
+        duplicateHandler(cy, tree);
+        return;
+    }
+
+    if (evt.ctrlKey && evt.key == "o") {
+        evt.preventDefault();
+        document.getElementById('upload').click();
+        return;
+    }
+});
+
 
 document.addEventListener('keyup', evt => {
+    evt.preventDefault();
     // we dont want to add nodes when the mouse is not over the cy div
     if (!isMouseOver) return;
     // we dont want to add nodes when we are applying a rule
     if (applyingRule) return;
+
+    if (evt.ctrlKey) return;
+
+
     handleKeyPress(cy, mousePosition, tree, evt);
 });
 
@@ -80,14 +113,10 @@ document.getElementById("import").addEventListener("click", evt => {
     document.getElementById('upload').click();
 });
 
-document.getElementById("duplicate").addEventListener("click", evt => {
-    const selected = cy.nodes(':selected');
-    if (selected.length == 1) {
-        const id = selected.id();
-        tree.duplicate(id);
-        tree.render(cy);
-    }
-});
+document.getElementById("duplicate").addEventListener("click", evt => duplicateHandler(cy, tree));
+
+document.getElementById("simplify").addEventListener("click", evt => handleSimplify(tree));
+
 
 document.getElementById("ai").addEventListener("click", evt => handleAi(tree));
 document.getElementById("spar").addEventListener("click", evt => handleSPar(tree));

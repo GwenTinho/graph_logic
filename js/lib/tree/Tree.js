@@ -29,6 +29,16 @@ class Tree {
         return this.maxId - 1;
     }
 
+    addNodeFromJson(nodeData) {
+        const node = TreeNode.deserialize(JSON.parse(nodeData), { id: this.maxId });
+        if (this.roots.length === 0) {
+            this.roots = [node];
+            return;
+        }
+        this.roots.push(node);
+        this.updateMaxId();
+    }
+
 
     connectPrimeNode(id1, id2) {
         const node1 = this.getNode(id1);
@@ -122,6 +132,9 @@ class Tree {
 
     duplicate(id) {
         const node = this.getRoot(id);
+        if (!node) {
+            return;
+        }
         const newNode = node.duplicate(this.maxId);
         this.roots.push(newNode);
         this.updateMaxId();
@@ -171,7 +184,10 @@ class Tree {
 
     serialize() {
         if (this.isConnected()) {
-            return this.roots?.[0].serialize();
+            if (this.roots.length == 0) {
+                return {};
+            }
+            return this.roots[0].serialize();
         }
     }
 
@@ -186,7 +202,7 @@ class Tree {
         this.maxId = maxId;
     }
 
-    static deserialize(data) {
+    static deserialize(data, maxId = 0) {
         // TODO
         // currently ids are not set properly
         // this is not a problem for the proof and rendering
@@ -196,7 +212,7 @@ class Tree {
         const tree = new Tree();
 
         if (data) {
-            const root = TreeNode.deserialize(data);
+            const root = TreeNode.deserialize(data, { id: maxId });
             root.nodeData.isRoot = true;
             tree.roots.push(root);
             tree.updateMaxId();

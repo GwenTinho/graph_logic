@@ -49,4 +49,12 @@ function cleanLayout(cy) {
     cy.fit(10);
 };
 
-export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel };
+function duplicateHandler(cy, tree) {
+    const selected = cy.nodes(':selected');
+    if (selected.length === 1) {
+        tree.duplicate(selected[0].id());
+        tree.render(cy);
+    }
+}
+
+export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel, duplicateHandler };
