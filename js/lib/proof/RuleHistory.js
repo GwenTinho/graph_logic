@@ -10,6 +10,13 @@ class RuleHistory {
         });
     }
 
+    addSimplification() {
+        this.history.push({
+            rule: "Simplification",
+            id: "Simplification"
+        });
+    }
+
     getHistory() {
         return this.history;
     }

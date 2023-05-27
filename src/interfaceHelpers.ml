@@ -195,3 +195,15 @@ let switch_par pathPar pathOut pathPrime pathInPrime =
   | Some tree ->
       Js.Unsafe.inject
         (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)
+
+let simplify () =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  match LogicalTree.simplify tree with
+  | None -> Js.Unsafe.inject Js.undefined
+  | Some tree ->
+      Js.Unsafe.inject
+        (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)

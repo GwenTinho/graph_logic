@@ -1,6 +1,7 @@
 import AiDown from "../proof/AiDown.js";
 import PrimeDown from "../proof/PrimeDown.js";
 import SwitchPar from "../proof/SwitchPar.js";
+import Tree from "../tree/Tree.js";
 
 // check if tree is valid before a proof TODO
 function isValid(tree) {
@@ -95,4 +96,19 @@ function handlePrime(tree) {
     rule.nextRule();
 }
 
-export { handleAi, handleSPar, handlePrime, handleRuleClick };
+function handleSimplify(tree) {
+    if (!isValid(tree)) return;
+    const serializedString = simplify();
+    window.ruleHistory.addSimplification();
+    window.ruleHistory.render();
+    if (serializedString === undefined) {
+        window.tree = new Tree();
+        window.tree.render(cy);
+        return;
+    }
+
+    window.tree = Tree.deserialize(JSON.parse(serializedString));
+    window.tree.render(cy);
+}
+
+export { handleAi, handleSPar, handlePrime, handleRuleClick, handleSimplify };

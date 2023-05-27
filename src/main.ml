@@ -15,4 +15,6 @@ let _ =
        method isPrime graph =
          let directed = Js.Unsafe.js_expr "directed" |> Js.to_bool in
          isPrimeIdGraph ~directed graph
+
+       method simplify = simplify ()
     end)
