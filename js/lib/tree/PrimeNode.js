@@ -3,13 +3,14 @@ import TreeNode from "./TreeNode.js";
 class PrimeNode extends TreeNode {
     constructor(nodeData) {
         super(nodeData);
-        if (this.nodeData.label !== "prime") throw "Cannot make a PrimeNode with a non-prime nodeData";
+        if (this.nodeData.class !== "prime") throw "Cannot make a PrimeNode with a non-prime nodeData";
 
     }
 
     addChild(node) {
         const { x, y, id } = node.nodeData;
         this.nodeData.graph.addNode(x, y, id);
+        node.nodeData.isRoot = false;
         this.successors.push(node); // might be problematic for orderings
         return true;
     }
@@ -24,7 +25,7 @@ class PrimeNode extends TreeNode {
             to_add.push({
                 group: 'edges',
                 data: {
-                    source: id + "prime-representative",
+                    source: (this.nodeData.id + id) + "prime-representative",
                     target: id,
                 },
             });
