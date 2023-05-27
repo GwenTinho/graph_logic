@@ -69,6 +69,13 @@ const style = [
         }
     },
     {
+        selector: '.given',
+        style: {
+            'background-color': 'lightgreen',
+            'border-width': '2px',
+        }
+    },
+    {
         selector: ':selected',
         style: {
             'background-color': 'deepskyblue',
