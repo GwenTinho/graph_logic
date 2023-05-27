@@ -1,6 +1,6 @@
 .cy {
     height: 50vh;
-    width: 35vw;
+    width: 50vw;
     position: relative;
     background-color: lightgrey;
     border-radius: 15px;
@@ -65,10 +65,6 @@ button {
     padding-right: 0px;
     padding-left: 0px;
     margin-top: 20px;
-}
-
-#apply {
-    background: rgb(41, 23, 202);
 }
 
 .grid {
@@ -148,4 +144,52 @@ button {
 #history-table th:last-child {
     border-top-right-radius: 10px;
     /* Add border-radius to the top right corner */
+}
+
+#selected-node {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 20%;
+    background-color: lightblue;
+    margin: 20px auto;
+}
+
+#selected-node-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#selected-node-content h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+#selected-node-content p {
+    margin: 5px 0;
+    padding: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+
+#selected-node.success {
+    background-color: #4caf50;
+    /*force overwrite the previous color and then reset */
+    color: #fff;
+}
+
+
+
+.rule-selection button {
+    padding: 20px 10px;
+    /* Adjust the padding to make the buttons smaller */
+    font-size: 14px;
+    /* Adjust the font size as needed */
+    width: 100px;
 }
