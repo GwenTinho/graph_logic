@@ -151,7 +151,7 @@ class TreeNodeData {
                 return new TreeNodeData("*", 0, 0, true, id);
             case "prime":
                 const idgData = new TreeNodeData("^", 0, 0, true, id);
-                idgData.graph = IdGraph.deserialize(data.graph);
+                idgData.graph = IdGraph.deserialize(data.graph, id);
                 return idgData;
             case "before":
                 return new TreeNodeData(">", 0, 0, true, id);

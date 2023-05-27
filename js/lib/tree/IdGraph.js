@@ -17,19 +17,19 @@ class IdGraph {
     }
 
     addEdge(id1, id2) {
-        this.adjacency[id1].push(id2);
+        this.adjacency[id1].push(parseInt(id2));
         //this.adjacency[id2].push(id1); undirected edges
     }
 
     duplicate(newParentId) {
         const graph = new IdGraph(newParentId);
         for (const id in this.nodes) {
-            graph.addNode(this.nodes[id].x, this.nodes[id].y, id);
+            graph.addNode(this.nodes[id].x, this.nodes[id].y, parseInt(id));
         }
 
         for (const id in this.adjacency) {
             for (const target of this.adjacency[id]) {
-                graph.addEdge(id, target);
+                graph.addEdge(parseInt(id), parseInt(target));
             }
         }
 
@@ -87,12 +87,12 @@ class IdGraph {
         const nodes = [];
         const edges = [];
         for (const id in this.nodes) {
-            nodes.push(id);
+            nodes.push(parseInt(id));
         }
 
         for (const id in this.adjacency) {
             for (const target of this.adjacency[id]) {
-                edges.push([id, target]);
+                edges.push({ source: parseInt(id), target: parseInt(target) });
             }
         }
 
@@ -102,16 +102,16 @@ class IdGraph {
         };
     }
 
-    static deserialize(data) {
+    static deserialize(data, id) {
         // deserialize from a list of nodes and a list of edges
 
-        const graph = new IdGraph();
-        for (const node of data.nodes) {
-            graph.addNode(0, 0, node.id);
+        const graph = new IdGraph(id);
+        for (const id of data.nodes) {
+            graph.addNode(0, 0, id);
         }
 
-        for (const edge of data.edges) {
-            graph.addEdge(edge[0], edge[1]);
+        for (const { source, target } of data.edges) {
+            graph.addEdge(source, target);
         }
 
         return graph;

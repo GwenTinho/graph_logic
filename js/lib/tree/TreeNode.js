@@ -119,12 +119,13 @@ class TreeNode {
         return out;
     }
 
-    static deserialize(data, id = 0) {
-        const nodeData = TreeNodeData.deserialize(data, id);
+    static deserialize(data, idref = { id: 0 }) {
+        const nodeData = TreeNodeData.deserialize(data, idref.id);
         const successors = [];
         if (!nodeData.canHaveChildren) return new TreeNode(nodeData);
         for (const successor of data.successors) {
-            successors.push(TreeNode.deserialize(successor, ++id));
+            idref.id++;
+            successors.push(TreeNode.deserialize(successor, idref));
         }
         return new TreeNode(nodeData, successors);
     }
