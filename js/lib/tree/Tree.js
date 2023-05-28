@@ -3,6 +3,7 @@ import PrimeNode from './PrimeNode.js';
 import TreeNode from './TreeNode.js';
 import { TreeNodeData } from './TreeNodeData.js';
 
+// class representing a collection of disconnected trees, we store the roots of the trees
 class Tree {
     constructor() {
         this.roots = [];
@@ -26,6 +27,16 @@ class Tree {
         }
         this.roots.push(node);
         return this.maxId - 1;
+    }
+
+    addNodeFromJson(nodeData) {
+        const node = TreeNode.deserialize(JSON.parse(nodeData), { id: this.maxId });
+        if (this.roots.length === 0) {
+            this.roots = [node];
+            return;
+        }
+        this.roots.push(node);
+        this.updateMaxId();
     }
 
 
@@ -109,15 +120,26 @@ class Tree {
     }
 
     getPath(id) {
-        for (let index = 0; index < roots.length; index++) {
-            const root = roots[index];
+        for (let index = 0; index < this.roots.length; index++) {
+            const root = this.roots[index];
             const path = root.getPath(id);
-            if (path != null) {
+            if (path !== undefined) {
                 path.unshift(index);
                 return path;
             }
         }
     }
+
+    duplicate(id) {
+        const node = this.getRoot(id);
+        if (!node) {
+            return;
+        }
+        const newNode = node.duplicate(this.maxId);
+        this.roots.push(newNode);
+        this.updateMaxId();
+    }
+
 
     negate(id) {
         const node = this.getNode(id);
@@ -138,9 +160,34 @@ class Tree {
         return this.roots.length <= 1;
     }
 
+    isAllPrime() {
+        // check if all type prime nodes are prime
+        // for this check if a node is of class "prime" and then call isPrime on the graph
+        for (const root of this.roots) {
+            if (root.nodeData.class == "prime") {
+                if (!root.nodeData.graph.isValid()) {
+                    return false;
+                }
+                // otherwise continue down the tree until all nodes are validated
+                for (const successor of root.successors) {
+                    if (successor.nodeData.class == "prime") {
+                        if (!successor.nodeData.graph.isValid()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
     serialize() {
         if (this.isConnected()) {
-            return this.roots?.[0].serialize();
+            if (this.roots.length == 0) {
+                return {};
+            }
+            return this.roots[0].serialize();
         }
     }
 
@@ -155,11 +202,18 @@ class Tree {
         this.maxId = maxId;
     }
 
-    static deserialize(data) {
+    static deserialize(data, maxId = 0) {
+        // TODO
+        // currently ids are not set properly
+        // this is not a problem for the proof and rendering
+
+        // we also only want to deserialize the first root since we assume it is a tree
+
         const tree = new Tree();
 
         if (data) {
-            const root = TreeNode.deserialize(data);
+            const root = TreeNode.deserialize(data, { id: maxId });
+            root.nodeData.isRoot = true;
             tree.roots.push(root);
             tree.updateMaxId();
         }

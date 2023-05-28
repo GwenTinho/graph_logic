@@ -1,15 +1,47 @@
-{
-    "connective": "par",
-    "successors": [
-        {
-            "connective": "atom",
-            "label": "a",
-            "polarisation": true
-        },
-        {
-            "connective": "atom",
-            "label": "a",
-            "polarisation": false
-        }
-    ]
-}
+[
+    {
+        "connective": "par",
+        "successors": [
+            {
+                "connective": "atom",
+                "label": "a",
+                "polarisation": true
+            },
+            {
+                "connective": "atom",
+                "label": "a",
+                "polarisation": false
+            }
+        ]
+    },
+    {
+        "connective": "par",
+        "successors": [
+            {
+                "connective": "atom",
+                "label": "a",
+                "polarisation": true
+            },
+            {
+                "connective": "atom",
+                "label": "a",
+                "polarisation": false
+            },
+            {
+                "connective": "par",
+                "successors": [
+                    {
+                        "connective": "atom",
+                        "label": "b",
+                        "polarisation": true
+                    },
+                    {
+                        "connective": "atom",
+                        "label": "b",
+                        "polarisation": false
+                    }
+                ]
+            }
+        ]
+    }
+]

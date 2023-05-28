@@ -50,6 +50,7 @@ let get_layout cy root =
   in
   cy##layout options
 
+(* Take a js object of {nodes: int list, edges int list}*)
 let isPrimeIdGraph ?directed idGraph =
   let jsnode_list = idGraph##nodes |> Js.to_array |> Array.to_list in
   let jsedge_list = idGraph##edges |> Js.to_array |> Array.to_list in
@@ -137,7 +138,7 @@ let recompose () =
     in
     Js.Unsafe.global##cleanLayout cy1
 
-let ai_down path1 path2 pathPar =
+let ai_down pathPar path1 path2 =
   let tree =
     Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
     |> Js.to_string |> Yojson.Basic.from_string
@@ -148,7 +149,60 @@ let ai_down path1 path2 pathPar =
   let pathPar =
     Js.to_array pathPar |> Array.to_list |> List.map ~f:Js.parseInt
   in
-  match PathRules.atomic_identity_down_paths tree path1 path2 pathPar with
+  match PathRules.atomic_identity_down_paths tree pathPar path1 path2 with
+  | None -> Js.Unsafe.inject Js.undefined
+  | Some tree ->
+      Js.Unsafe.inject
+        (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)
+
+let prime_down pathPar path1 path2 =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  let path1 = Js.to_array path1 |> Array.to_list |> List.map ~f:Js.parseInt in
+  let path2 = Js.to_array path2 |> Array.to_list |> List.map ~f:Js.parseInt in
+  let pathPar =
+    Js.to_array pathPar |> Array.to_list |> List.map ~f:Js.parseInt
+  in
+  match PathRules.prime_down_paths tree pathPar path1 path2 with
+  | None -> Js.Unsafe.inject Js.undefined
+  | Some tree ->
+      Js.Unsafe.inject
+        (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)
+
+let switch_par pathPar pathOut pathPrime pathInPrime =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  let pathOut =
+    Js.to_array pathOut |> Array.to_list |> List.map ~f:Js.parseInt
+  in
+  let pathPrime =
+    Js.to_array pathPrime |> Array.to_list |> List.map ~f:Js.parseInt
+  in
+  let pathInPrime =
+    Js.to_array pathInPrime |> Array.to_list |> List.map ~f:Js.parseInt
+  in
+  let pathPar =
+    Js.to_array pathPar |> Array.to_list |> List.map ~f:Js.parseInt
+  in
+  match PathRules.switch_par tree pathPar pathOut pathPrime pathInPrime with
+  | None -> Js.Unsafe.inject Js.undefined
+  | Some tree ->
+      Js.Unsafe.inject
+        (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)
+
+let simplify () =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  match LogicalTree.simplify tree with
   | None -> Js.Unsafe.inject Js.undefined
   | Some tree ->
       Js.Unsafe.inject

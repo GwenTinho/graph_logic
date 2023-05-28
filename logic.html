@@ -9,6 +9,8 @@
     <script src="https://unpkg.com/layout-base/layout-base.js"></script>
     <script src="https://unpkg.com/cose-base/cose-base.js"></script>
     <script src="js/dependencies/cytoscape-cose-bilkent.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="css/pico.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -55,50 +57,67 @@
             </div>
             <div class="col">
                 <div class="grid">
-                    <button type="button" id="clear">Clear Tree</button>
-                    <button type="button" id="center">Center Tree</button>
-                    <button type="button" id="import">Import Tree</button>
+                    <button type="button" id="clear">Clear</button>
+                    <button type="button" id="center">Center</button>
+                    <button type="button" id="import">Import</button>
                     <input id="upload" type="file" style="display: none;" />
                     <!-- TODO add upload functionality for proofs -->
                 </div>
                 <div id="cy" class="cy"></div>
                 <div class="grid">
-                    <button type="button" id="download">Download Tree</button>
+                    <button type="button" id="download">Download</button>
                     <button type="button" id="undo">Undo</button>
+                    <button type="button" id="duplicate">Duplicate</button>
                 </div>
                 <article style="padding-bottom: 20px; text-align: left; width: 35vw;">
                     <details>
-                        <summary>Tree Manipulation Instructions</summary>
+                        <summary>Instructions</summary>
                         <ul>
                             <li>To add nodes: move mouse pointer to where you want to add a node and press a letter or
                                 number on the keyboard</li>
                             <li>To add edges: click on an unselected node to connect it to all selected nodes</li>
                             <li>To select a node or an edge: click or shift click to select several</li>
                             <li>To delete nodes: hit backspace to delete all selected nodes and corresponding edges</li>
-                            <li>To negate nodes: right click selected or single node</li>
+                            <li>To negate subtree: right click selected or single node</li>
                             <li>To create a par, press "&". To create a tensor, press "*". To create a before, press
                                 ">". To create an arbitrary graph, press "^".</li>
                             <li>To add a node to a before or an arbitrary graph, either create a node while the
                                 before/graph's background is selected or try to create an edge from the before/graph to
                                 the node.</li>
+                            <li>To download the tree press the download button. To upload a tree, press the upload
+                                button and select the file you want to upload. You can also access these using ctrl + s
+                                and ctrl + o</li>
+                            <li>To undo the last action, press the undo button or ctrl + z</li>
+                            <li>To duplicate the currently selected tree, press the duplicate button or ctrl + d</li>
+                            <li>To apply a rule to a valid tree tree a rule button and then follow the instructions in
+                                the modal</li>
+                            <li>To simplify a tree, press the simplify button</li>
                         </ul>
                     </details>
                 </article>
             </div>
+
             <div class="col">
                 <div class="rule-selection">
-                    <h3>Rule Selection</h3>
+                    <h3>Rules</h3>
                     <div class="col">
-                        <button type="button" id="ai">AI</button>
-                        <button type="button" id="pathAtom1" style="display: none;">Atom </button>
-                        <button type="button" id="pathAtom2" style="display: none;">Atom </button>
-                        <button type="button" id="pathPar" style="display: none;">Par </button>
-                        <button type="button" id="spar">S&</button>
-                        <button type="button" id="prime">Prime</button>
+                        <button type="button" id="ai">\(ai \downarrow\) </button>
+                        <button type="button" id="spar">\(s_⅋\)</button>
+                        <button type="button" id="prime">\(p \downarrow\)</button>
+                        <button type="button" id="simplify">Simplify</button>
                     </div>
-                    <button type="button" id="apply">Apply</button>
+                </div>
+                <div class="node-selection">
+                    <div class="col">
+                        <div id="selected-node">
+                            <div id="selected-node-content">
+                                <h4 id="selected-node-header"></h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </section>
 

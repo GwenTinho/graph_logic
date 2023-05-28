@@ -1,3 +1,5 @@
+import { isValidLabel } from "../util/helper.js";
+
 function handleKeyPress(cy, mousePosition, tree, evt) {
     if (evt.key == "Shift") return;
 
@@ -12,6 +14,8 @@ function handleKeyPress(cy, mousePosition, tree, evt) {
 
     const string = evt.key;
 
+    if (!isValidLabel(string)) return;
+
     const selected = cy.nodes(':selected');
 
 
@@ -23,18 +27,29 @@ function handleKeyPress(cy, mousePosition, tree, evt) {
 
         tree.connectRootToNode(selected[0].id(), addedId);
 
-        console.log(selected[0].id())
+        tree.render(cy);
+        window.ruleHistory.clear();
+        window.ruleHistory.render();
+        return;
+    }
+
+    if (selected.length == 1 && (selected[0].hasClass("par") || selected[0].hasClass("tensor"))) {
+        const addedId = tree.addNode(string, mousePosition.x, mousePosition.y, true);
+
+        tree.connectRootToNode(selected[0].id(), addedId);
 
         tree.render(cy);
+        window.ruleHistory.clear();
+        window.ruleHistory.render();
         return;
     }
 
     tree.addNode(string, mousePosition.x, mousePosition.y, true);
+    // reset rulehistory
+    window.ruleHistory.clear();
+    window.ruleHistory.render();
+
     tree.render(cy);
-
-
-
-
 }
 
 

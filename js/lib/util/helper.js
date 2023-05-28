@@ -1,26 +1,3 @@
-function weightedBarycenter(parent, x, y) {
-    const children = parent.children();
-    const distances = children.map(c => {
-        const cx = c.renderedPosition().x;
-        const dx = cx - x;
-        const cy = c.renderedPosition().y;
-        const dy = cy - y;
-        return Math.sqrt(dx * dx + dy * dy);
-    });
-    const max = Math.max(...distances);
-    const temp_weights = distances.map(d => { return max / d });
-    const total = temp_weights.reduce((acc, w) => acc + w, 0);
-    const weights = temp_weights.map(d => { return d / total });
-    const barycenter = children.reduce((acc, c, i) => {
-        const w = weights[i];
-        const pos = c.renderedPosition();
-        const x = pos.x * w;
-        const y = pos.y * w;
-        return { x: acc.x + x, y: acc.y + y }
-    }, { x: 0, y: 0 });
-    return barycenter;
-}
-
 function isAlphaNumeric(string) {
     return string.length == 1 && (/^[a-zA-Z0-9]/).test(string)
 };
@@ -39,12 +16,6 @@ function undo(cy) { // TODO refactor
     }
     if (change == "remove") {
         eles.restore();
-        return;
-    }
-    if (change == "replace") {
-        eles.remove();
-        undo(cy);
-        cleanLayout(cy);
         return;
     }
 };
@@ -68,12 +39,22 @@ function clearGraph(cy) {
 
 function cleanLayout(cy) {
     cy.layout({
-        name: 'cose-bilkent',
+        name: 'breadthfirst',
         animate: false,
         idealEdgeLength: 120,
+        directed: true,
+        roots: cy.nodes().roots(),
     }).run();
     cy.center();
     cy.fit(10);
 };
 
-export { weightedBarycenter, undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel };
+function duplicateHandler(cy, tree) {
+    const selected = cy.nodes(':selected');
+    if (selected.length === 1) {
+        tree.duplicate(selected[0].id());
+        tree.render(cy);
+    }
+}
+
+export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel, duplicateHandler };

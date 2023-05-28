@@ -1,0 +1,30 @@
+{
+    "connective": "par",
+    "successors": [
+        {
+            "connective": "atom",
+            "label": "a",
+            "polarisation": true
+        },
+        {
+            "connective": "atom",
+            "label": "b",
+            "polarisation": true
+        },
+        {
+            "connective": "tensor",
+            "successors": [
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": false
+                },
+                {
+                    "connective": "atom",
+                    "label": "b",
+                    "polarisation": false
+                }
+            ]
+        }
+    ]
+}
