@@ -1,10 +1,19 @@
 .cy {
-    height: 50vh;
-    width: 50vw;
+    height: 70vh;
+    width: 35vw;
     position: relative;
     background-color: lightgrey;
     border-radius: 15px;
 }
+
+.cygs {
+    height: 100vh;
+    width: 70vw;
+    position: relative;
+    background-color: lightgrey;
+    border-radius: 15px;
+}
+
 
 #layout {
     display: flex;
@@ -92,15 +101,12 @@ button {
     /* Add border-radius property */
 }
 
-#history-table th,
+
 #history-table td {
     padding: 8px;
 }
 
-#history-table th {
-    background-color: #1095c1;
-    text-align: left;
-}
+
 
 #history-body tr:nth-child(even) {
     background-color: #1186c9;
@@ -192,4 +198,46 @@ button {
     font-size: 14px;
     /* Adjust the font size as needed */
     width: 100px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    position: absolute;
+    top: 0%;
+    right: 0%;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 0%;
+    right: 100%;
+    background-color: #1095c1;
+    min-width: 160px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content button {
+    display: block;
+    padding: 10px 20px;
+    background-color: #1095c1;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content button:hover {
+    background-color: #1186c9;
 }
