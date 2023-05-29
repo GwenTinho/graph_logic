@@ -7,17 +7,32 @@
                 {
                     "connective": "atom",
                     "label": "a",
-                    "polarisation": true
+                    "polarisation": false
                 },
                 {
                     "connective": "atom",
                     "label": "a",
-                    "polarisation": false
+                    "polarisation": true
                 }
             ]
         },
         "steps": [
-            "ai"
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
@@ -33,84 +48,167 @@
                 {
                     "connective": "atom",
                     "label": "b",
-                    "polarisation": false
+                    "polarisation": true
                 }
             ]
         },
         "steps": [
-            "ai"
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
         "id": "ai_test3",
         "initial": {
-            "connective": "par",
             "successors": [
                 {
-                    "connective": "atom",
                     "label": "a",
-                    "polarisation": true
+                    "polarisation": true,
+                    "connective": "atom"
                 },
                 {
-                    "connective": "atom",
-                    "label": "b",
-                    "polarisation": false
-                },
-                {
-                    "connective": "atom",
                     "label": "a",
-                    "polarisation": false
+                    "polarisation": false,
+                    "connective": "atom"
                 },
                 {
-                    "connective": "atom",
                     "label": "b",
-                    "polarisation": true
+                    "polarisation": false,
+                    "connective": "atom"
+                },
+                {
+                    "label": "b",
+                    "polarisation": true,
+                    "connective": "atom"
                 }
-            ]
+            ],
+            "connective": "par"
         },
         "steps": [
-            "ai"
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
         "id": "ai_test4",
         "initial": {
-            "connective": "tensor",
             "successors": [
                 {
-                    "connective": "par",
                     "successors": [
                         {
-                            "connective": "atom",
                             "label": "a",
-                            "polarisation": true
+                            "polarisation": true,
+                            "connective": "atom"
                         },
                         {
-                            "connective": "atom",
                             "label": "a",
-                            "polarisation": false
+                            "polarisation": false,
+                            "connective": "atom"
                         }
-                    ]
+                    ],
+                    "connective": "par"
                 },
                 {
-                    "connective": "par",
                     "successors": [
                         {
-                            "connective": "atom",
                             "label": "b",
-                            "polarisation": true
+                            "polarisation": false,
+                            "connective": "atom"
                         },
                         {
-                            "connective": "atom",
                             "label": "b",
-                            "polarisation": false
+                            "polarisation": true,
+                            "connective": "atom"
                         }
-                    ]
+                    ],
+                    "connective": "par"
                 }
-            ]
+            ],
+            "connective": "tensor"
         },
         "steps": [
-            "ai"
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        1
+                    ],
+                    "atom1": [
+                        0,
+                        1,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
@@ -123,13 +221,13 @@
                     "successors": [
                         {
                             "connective": "atom",
-                            "label": "b",
-                            "polarisation": true
+                            "label": "a",
+                            "polarisation": false
                         },
                         {
                             "connective": "atom",
-                            "label": "a",
-                            "polarisation": false
+                            "label": "b",
+                            "polarisation": true
                         }
                     ]
                 },
@@ -151,7 +249,44 @@
             ]
         },
         "steps": [
-            "ai"
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        1
+                    ],
+                    "atom1": [
+                        0,
+                        1,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
@@ -164,12 +299,12 @@
                     "successors": [
                         {
                             "connective": "atom",
-                            "label": "b",
+                            "label": "a",
                             "polarisation": false
                         },
                         {
                             "connective": "atom",
-                            "label": "a",
+                            "label": "b",
                             "polarisation": false
                         }
                     ]
@@ -192,16 +327,73 @@
             ]
         },
         "steps": [
-            "ai"
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        1
+                    ],
+                    "atom1": [
+                        0,
+                        1,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
         "id": "pp_test1",
         "initial": {
-            "connective": "par",
             "successors": [
                 {
-                    "connective": "prime",
+                    "successors": [
+                        {
+                            "label": "a",
+                            "polarisation": true,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "b",
+                            "polarisation": true,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "c",
+                            "polarisation": true,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "d",
+                            "polarisation": true,
+                            "connective": "atom"
+                        }
+                    ],
                     "graph": {
                         "nodes": [
                             1,
@@ -224,31 +416,31 @@
                             }
                         ]
                     },
-                    "successors": [
-                        {
-                            "connective": "atom",
-                            "label": "a",
-                            "polarisation": false
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "b",
-                            "polarisation": false
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "c",
-                            "polarisation": false
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "d",
-                            "polarisation": false
-                        }
-                    ]
+                    "connective": "prime"
                 },
                 {
-                    "connective": "prime",
+                    "successors": [
+                        {
+                            "label": "a",
+                            "polarisation": false,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "b",
+                            "polarisation": false,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "c",
+                            "polarisation": false,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "d",
+                            "polarisation": false,
+                            "connective": "atom"
+                        }
+                    ],
                     "graph": {
                         "nodes": [
                             1,
@@ -271,43 +463,133 @@
                             }
                         ]
                     },
-                    "successors": [
-                        {
-                            "connective": "atom",
-                            "label": "a",
-                            "polarisation": true
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "b",
-                            "polarisation": true
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "c",
-                            "polarisation": true
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "d",
-                            "polarisation": true
-                        }
-                    ]
+                    "connective": "prime"
                 }
-            ]
+            ],
+            "connective": "par"
         },
         "steps": [
-            "pp",
-            "ai"
+            {
+                "type": "pp",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "prime1": [
+                        0,
+                        0
+                    ],
+                    "prime2": [
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        1
+                    ],
+                    "atom1": [
+                        0,
+                        1,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        2
+                    ],
+                    "atom1": [
+                        0,
+                        2,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        2,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        3
+                    ],
+                    "atom1": [
+                        0,
+                        3,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        3,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
         "id": "pp_test2",
         "initial": {
-            "connective": "par",
             "successors": [
                 {
-                    "connective": "prime",
+                    "successors": [
+                        {
+                            "label": "a",
+                            "polarisation": false,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "b",
+                            "polarisation": false,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "c",
+                            "polarisation": true,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "d",
+                            "polarisation": true,
+                            "connective": "atom"
+                        }
+                    ],
                     "graph": {
                         "nodes": [
                             1,
@@ -330,31 +612,31 @@
                             }
                         ]
                     },
-                    "successors": [
-                        {
-                            "connective": "atom",
-                            "label": "a",
-                            "polarisation": true
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "b",
-                            "polarisation": true
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "c",
-                            "polarisation": false
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "d",
-                            "polarisation": false
-                        }
-                    ]
+                    "connective": "prime"
                 },
                 {
-                    "connective": "prime",
+                    "successors": [
+                        {
+                            "label": "a",
+                            "polarisation": true,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "b",
+                            "polarisation": true,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "c",
+                            "polarisation": false,
+                            "connective": "atom"
+                        },
+                        {
+                            "label": "d",
+                            "polarisation": false,
+                            "connective": "atom"
+                        }
+                    ],
                     "graph": {
                         "nodes": [
                             1,
@@ -377,72 +659,225 @@
                             }
                         ]
                     },
-                    "successors": [
-                        {
-                            "connective": "atom",
-                            "label": "a",
-                            "polarisation": false
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "b",
-                            "polarisation": false
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "c",
-                            "polarisation": true
-                        },
-                        {
-                            "connective": "atom",
-                            "label": "d",
-                            "polarisation": true
-                        }
-                    ]
+                    "connective": "prime"
                 }
-            ]
+            ],
+            "connective": "par"
         },
         "steps": [
-            "pp",
-            "ai"
+            {
+                "type": "pp",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "prime1": [
+                        0,
+                        0
+                    ],
+                    "prime2": [
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        1
+                    ],
+                    "atom1": [
+                        0,
+                        1,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        2
+                    ],
+                    "atom1": [
+                        0,
+                        2,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        2,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        3
+                    ],
+                    "atom1": [
+                        0,
+                        3,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        3,
+                        1
+                    ]
+                }
+            }
         ]
     },
     {
-        "id": "sw_test",
+        "id": "sw_test1",
         "initial": {
-            "connective": "par",
             "successors": [
                 {
-                    "connective": "atom",
                     "label": "a",
-                    "polarisation": true
+                    "polarisation": true,
+                    "connective": "atom"
                 },
                 {
-                    "connective": "atom",
                     "label": "b",
-                    "polarisation": true
+                    "polarisation": true,
+                    "connective": "atom"
                 },
                 {
-                    "connective": "tensor",
                     "successors": [
                         {
-                            "connective": "atom",
                             "label": "a",
-                            "polarisation": false
+                            "polarisation": false,
+                            "connective": "atom"
                         },
                         {
-                            "connective": "atom",
                             "label": "b",
-                            "polarisation": false
+                            "polarisation": false,
+                            "connective": "atom"
                         }
-                    ]
+                    ],
+                    "connective": "tensor"
                 }
-            ]
+            ],
+            "connective": "par"
         },
         "steps": [
-            "sw",
-            "sw",
-            "ai"
+            {
+                "type": "sw",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "outside": [
+                        0,
+                        0
+                    ],
+                    "prime": [
+                        0,
+                        2
+                    ],
+                    "inside": [
+                        0,
+                        2,
+                        0
+                    ]
+                }
+            },
+            {
+                "type": "sw",
+                "data": {
+                    "par": [
+                        0
+                    ],
+                    "outside": [
+                        0,
+                        0
+                    ],
+                    "prime": [
+                        0,
+                        1
+                    ],
+                    "inside": [
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            },
+            {
+                "type": "ai",
+                "data": {
+                    "par": [
+                        0,
+                        0,
+                        1
+                    ],
+                    "atom1": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "atom2": [
+                        0,
+                        0,
+                        1,
+                        1
+                    ]
+                }
+            }
         ]
     }
 ]
