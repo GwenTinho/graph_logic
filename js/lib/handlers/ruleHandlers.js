@@ -1,7 +1,9 @@
 import AiDown from "../proof/AiDown.js";
+import Auto from "../proof/Auto.js";
 import PrimeDown from "../proof/PrimeDown.js";
+import Simplify from "../proof/Simplify.js";
 import SwitchPar from "../proof/SwitchPar.js";
-import Tree from "../tree/Tree.js";
+
 
 // check if tree is valid before a proof TODO
 function isValid(tree) {
@@ -66,7 +68,7 @@ function handleRuleClick(cy, evt) {
             window.tree = rule.applyRule();
 
             window.tree.render(cy);
-            ruleHistory.add(rule.name, rule.enocodeId());
+            ruleHistory.add(rule);
             ruleHistory.render();
             applyingRule = false;
             rule = null;
@@ -98,17 +100,32 @@ function handlePrime(tree) {
 
 function handleSimplify(tree) {
     if (!isValid(tree)) return;
-    const serializedString = simplify();
-    window.ruleHistory.addSimplification();
-    window.ruleHistory.render();
-    if (serializedString === undefined) {
-        window.tree = new Tree();
-        window.tree.render(cy);
-        return;
-    }
-
-    window.tree = Tree.deserialize(JSON.parse(serializedString));
+    applyingRule = true;
+    rule = new Simplify();
+    window.tree = rule.applyRule();
+    ruleHistory.add(rule);
+    ruleHistory.render();
     window.tree.render(cy);
 }
 
-export { handleAi, handleSPar, handlePrime, handleRuleClick, handleSimplify };
+function handleAutoPrime() {
+    if (!isValid(tree)) return;
+    const auto = new Auto();
+    auto.pp();
+
+}
+
+function handleAutoSPar() {
+    if (!isValid(tree)) return;
+    const auto = new Auto();
+    auto.sw();
+}
+
+function handleAutoAi() {
+    if (!isValid(tree)) return;
+    const auto = new Auto();
+    auto.ai();
+}
+
+
+export { handleAi, handleSPar, handlePrime, handleRuleClick, handleSimplify, handleAutoAi, handleAutoPrime, handleAutoSPar };

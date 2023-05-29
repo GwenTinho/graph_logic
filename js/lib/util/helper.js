@@ -1,3 +1,5 @@
+import Tree from "../tree/Tree.js";
+
 function isAlphaNumeric(string) {
     return string.length == 1 && (/^[a-zA-Z0-9]/).test(string)
 };
@@ -7,20 +9,13 @@ function isValidLabel(label) {
 }
 
 
-function undo(cy) { // TODO refactor
-    if (cy.changes.length == 0) { return };
-    const [change, eles, ...rest] = cy.changes.pop();
-    if (change == "add") {
-        eles.remove();
-        return;
-    }
-    if (change == "remove") {
-        eles.restore();
-        return;
-    }
+function undo(cy) {
+    // TODO: undo rule application
+    // TODO: undo tree manipulation
 };
 
-function exportTree(tree) {
+function exportTree() {
+    if (!window.tree.isConnected()) return;
     const a = document.createElement("a");
     const string = JSON.stringify(tree.serialize());
     if (!string) { return };
@@ -32,9 +27,23 @@ function exportTree(tree) {
     document.body.removeChild(a);
 }
 
+function exportProof() {
+    if (!window.tree.isConnected() || !window.tree.isAllPrime()) return;
+    const a = document.createElement("a");
+    const proof = window.ruleHistory.serialize();
+    const string = JSON.stringify(proof);
+    if (!string) { return };
+    const file = new Blob([string], { type: "text/plain" });
+    a.href = URL.createObjectURL(file);
+    a.download = "proof.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+}
+
 function clearGraph(cy) {
-    const removed = cy.elements().remove();
-    cy.changes.push(["remove", removed]);
+    cy.elements().remove();
 }
 
 function cleanLayout(cy) {
@@ -57,4 +66,15 @@ function duplicateHandler(cy, tree) {
     }
 }
 
-export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel, duplicateHandler };
+function handleClear() {
+    clearGraph(cy);
+    window.applyingRule = false;
+    window.rule = null;
+    window.tree = new Tree();
+    document.getElementById("selected-node-header").innerHTML = "";
+    window.ruleHistory.clear();
+    window.ruleHistory.render();
+}
+
+
+export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel, duplicateHandler, exportProof, handleClear };

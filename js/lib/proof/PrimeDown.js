@@ -3,7 +3,7 @@ import Rule from "./Rule.js";
 
 class PrimeDown extends Rule {
     constructor() {
-        super('PrimeDown', ["par", "prime", "prime"]);
+        super('pp', ["par", "prime", "prime"]);
     }
 
     applyRule() {

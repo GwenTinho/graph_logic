@@ -62,7 +62,6 @@ class IdGraph {
                 },
             };
             const added = cy.add(node);
-            cy.changes.push(["add", added]);
             added.addClass('inCompound');
         }
 
@@ -76,7 +75,6 @@ class IdGraph {
                     },
                 };
                 const added = cy.add(innerEdge);
-                cy.changes.push(["add", added]);
                 added.addClass('compoundIn');
             }
         }

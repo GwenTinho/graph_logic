@@ -3,7 +3,7 @@ import Rule from "./Rule.js";
 
 class SwitchPar extends Rule {
     constructor() {
-        super('SwitchPar', ["par", "any", "any", "any"]);
+        super('sw', ["par", "any", "any", "any"]);
     }
 
     applyRule() {

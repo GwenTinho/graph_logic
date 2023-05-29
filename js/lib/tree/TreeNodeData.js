@@ -84,7 +84,6 @@ class TreeNodeData {
             };
             const added = cy.add(contextNode);
 
-            cy.changes.push(["add", added]);
             added.addClass(this.class);
 
             this.graph.render(cy);
@@ -104,7 +103,6 @@ class TreeNodeData {
             },
         };
         const added = cy.add(node);
-        cy.changes.push(["add", added]);
         added.addClass(this.class);
         if (this.isRoot) added.addClass("root");
         return added;
