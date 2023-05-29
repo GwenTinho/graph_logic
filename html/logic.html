@@ -1,0 +1,113 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Graph Logic</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="../js/dependencies/cytoscape.js"></script>
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+    <script src="../js/dependencies/cytoscape-cose-bilkent.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="../css/pico.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+
+</head>
+
+<body>
+    <!-- Modal -->
+    <dialog id="modal">
+        <article>
+            <a href="#close" aria-label="Close" class="close" onClick="toggleModal()"></a>
+            <h3 id="modal-title"></h3>
+            <p id="modal-text"></p>
+            <footer id="modal-footer">
+                <a href="#ok" role="button" onClick="toggleModal()">Ok</a>
+            </footer>
+        </article>
+    </dialog>
+    <script src="../js/dependencies/modal.js"></script>
+
+    <section>
+        <div id="layout">
+            <div class="col">
+                <a href="../index.html" class="styled-link"><i class="ph ph-house"></i></a>
+                <a href="instructions.html" class="styled-link"><i class="ph ph-question"></i></a>
+                <div class="rule-history">
+
+                    <button type="button" id="verify"> <i class="ph ph-seal-check"></i> </button>
+                    <h3><i class="ph ph-clock-counter-clockwise"></i></h3>
+                    <table id="history-table">
+                        <tbody id="history-body">
+                            <!-- Table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col">
+
+                <div id="cy" class="cygs"></div>
+            </div>
+
+            <div class="col">
+                <div class="rule-selection">
+                    <h3>Rules</h3>
+                    <div class="col">
+                        <button type="button" id="ai">\(ai \downarrow\) </button>
+                        <button type="button" id="spar">\(s_⅋\)</button>
+                        <button type="button" id="prime">\(p \downarrow\)</button>
+                        <button type="button" id="simplify">Simplify</button>
+                        <button type="button" id="auto-ai">Auto \(ai \downarrow\)</button>
+                        <button type="button" id="auto-spar">Auto \(s_⅋\)</button>
+                        <button type="button" id="auto-prime">Auto \(p \downarrow\)</button>
+                    </div>
+                </div>
+                <div class="node-selection">
+                    <div class="col">
+                        <div id="selected-node">
+                            <div id="selected-node-content">
+                                <h4 id="selected-node-header"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="dropbtn">Tools</button>
+                <div class="dropdown-content">
+                    <button type="button" id="import"><i class="ph ph-upload-simple"></i></button>
+                    <input id="upload" type="file" style="display: none;" />
+                    <button type="button" id="download"><i class="ph ph-download-simple"></i></button>
+                    <button type="button" id="export-proof"> <i class="ph ph-export"></i> </button>
+                    <button type="button" id="import-proof"> <i class="ph ph-arrow-square-in"></i> </button>
+                    <input id="upload-proof" type="file" style="display: none;" />
+                    <button type="button" id="clear"><i class="ph ph-broom"></i></button>
+                    <button type="button" id="center"><i class="ph ph-arrows-in-line-horizontal"></i></button>
+                    <button type="button" id="undo"><i class="ph ph-arrow-u-down-left"></i></button>
+                    <button type="button" id="duplicate"><i class="ph ph-copy-simple"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <script type="module" src="../js/lib/handlers/clickHandler.js"></script>
+    <script type="module" src="../js/lib/util/helper.js"></script>
+    <script type="module" src="../js/lib/handlers/keypressHandler.js"></script>
+    <script type="module" src="../js/lib/handlers/ruleHandlers.js"></script>
+    <script type="module" src="../js/lib/util/style.js"></script>
+    <script type="module" src="../js/lib/tree/Tree.js"></script>
+    <script type="module" src="../js/lib/tree/TreeNode.js"></script>
+    <script type="module" src="../js/lib/tree/IdGraph.js"></script>
+    <script type="module" src="../js/logic.js"></script>
+    <script src="../_build/default/src/main.bc.js"></script>
+
+</body>
+
+</html>

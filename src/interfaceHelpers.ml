@@ -149,7 +149,7 @@ let ai_down pathPar path1 path2 =
   let pathPar =
     Js.to_array pathPar |> Array.to_list |> List.map ~f:Js.parseInt
   in
-  match PathRules.atomic_identity_down_paths tree pathPar path1 path2 with
+  match Rules.atomic_identity_down tree pathPar path1 path2 with
   | None -> Js.Unsafe.inject Js.undefined
   | Some tree ->
       Js.Unsafe.inject
@@ -166,7 +166,7 @@ let prime_down pathPar path1 path2 =
   let pathPar =
     Js.to_array pathPar |> Array.to_list |> List.map ~f:Js.parseInt
   in
-  match PathRules.prime_down_paths tree pathPar path1 path2 with
+  match Rules.prime_down tree pathPar path1 path2 with
   | None -> Js.Unsafe.inject Js.undefined
   | Some tree ->
       Js.Unsafe.inject
@@ -190,7 +190,7 @@ let switch_par pathPar pathOut pathPrime pathInPrime =
   let pathPar =
     Js.to_array pathPar |> Array.to_list |> List.map ~f:Js.parseInt
   in
-  match PathRules.switch_par tree pathPar pathOut pathPrime pathInPrime with
+  match Rules.switch_par tree pathPar pathOut pathPrime pathInPrime with
   | None -> Js.Unsafe.inject Js.undefined
   | Some tree ->
       Js.Unsafe.inject
@@ -207,3 +207,35 @@ let simplify () =
   | Some tree ->
       Js.Unsafe.inject
         (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)
+
+let auto_ai () =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  Parseproofs.serialize_fingerprint (Tactics.auto_ai tree)
+  |> Yojson.Basic.to_string |> Js.string
+
+let auto_prime () =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  Parseproofs.serialize_fingerprint (Tactics.auto_prime_down tree)
+  |> Yojson.Basic.to_string |> Js.string
+
+let auto_switch () =
+  let tree =
+    Js.Unsafe.eval_string "JSON.stringify(tree.serialize())"
+    |> Js.to_string |> Yojson.Basic.from_string
+  in
+  let tree = Parseproofs.parse_tree tree in
+  Parseproofs.serialize_fingerprint (Tactics.auto_switch_par tree)
+  |> Yojson.Basic.to_string |> Js.string
+
+let verify proof =
+  let proof = Js.to_string proof |> Yojson.Basic.from_string in
+  let proof = Parseproofs.parse_fingerprint proof in
+  Poly.( = ) None (Fingerprint.verify proof) |> Js.bool

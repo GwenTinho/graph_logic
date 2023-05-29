@@ -116,21 +116,74 @@ let read_file_as_trees filepath =
   List.map ~f:parse_tree (to_list js_obj)
 
 let to_step js_obj =
-  let step_type = js_obj |> to_string in
+  let step_type = js_obj |> member "type" |> to_string in
+  let data = js_obj |> member "data" in
   match step_type with
   | "sw" ->
-      Fingerprint.Switch_Par
-        ( Rules.pick_largest,
-          Rules.pick_first_atom_or_first,
-          Rules.pick_first_atom_or_first )
-  | "ai" -> Fingerprint.AI_down
-  | "pp" -> Fingerprint.Prime_down
+      let par = List.map ~f:to_int (data |> member "par" |> to_list) in
+      let outside = List.map ~f:to_int (data |> member "outside" |> to_list) in
+      let inside = List.map ~f:to_int (data |> member "inside" |> to_list) in
+      let prime = List.map ~f:to_int (data |> member "prime" |> to_list) in
+
+      Fingerprint.Switch_Par { par; outside; inside; prime }
+  | "ai" ->
+      let par = List.map ~f:to_int (data |> member "par" |> to_list) in
+      let atom1 = List.map ~f:to_int (data |> member "atom1" |> to_list) in
+      let atom2 = List.map ~f:to_int (data |> member "atom2" |> to_list) in
+      Fingerprint.AI_down { par; atom1; atom2 }
+  | "pp" ->
+      let par = List.map ~f:to_int (data |> member "par" |> to_list) in
+      let prime1 = List.map ~f:to_int (data |> member "prime1" |> to_list) in
+      let prime2 = List.map ~f:to_int (data |> member "prime2" |> to_list) in
+      Fingerprint.Prime_down { par; prime1; prime2 }
+  | "simplify" -> Fingerprint.Simplify
   | _ -> failwith "Tried to serialize malformed proof"
 
 let parse_fingerprint js_obj : Fingerprint.proof =
   let initial = js_obj |> member "initial" |> parse_tree in
   let steps = List.map ~f:to_step (js_obj |> member "steps" |> to_list) in
   { initial; steps }
+
+let serialize_rule (rule : Fingerprint.rule_id) =
+  let rule_type =
+    match rule with
+    | Fingerprint.Switch_Par _ -> "sw"
+    | Fingerprint.AI_down _ -> "ai"
+    | Fingerprint.Prime_down _ -> "pp"
+    | Fingerprint.Simplify -> "simplify"
+  in
+  let data =
+    match rule with
+    | Fingerprint.Switch_Par { par; outside; inside; prime } ->
+        let par = `List (List.map par ~f:(fun x -> `Int x)) in
+        let outside = `List (List.map outside ~f:(fun x -> `Int x)) in
+        let inside = `List (List.map inside ~f:(fun x -> `Int x)) in
+        let prime = `List (List.map prime ~f:(fun x -> `Int x)) in
+        `Assoc
+          [
+            ("par", par);
+            ("outside", outside);
+            ("inside", inside);
+            ("prime", prime);
+          ]
+    | Fingerprint.AI_down { par; atom1; atom2 } ->
+        let par = `List (List.map par ~f:(fun x -> `Int x)) in
+        let atom1 = `List (List.map atom1 ~f:(fun x -> `Int x)) in
+        let atom2 = `List (List.map atom2 ~f:(fun x -> `Int x)) in
+        `Assoc [ ("par", par); ("atom1", atom1); ("atom2", atom2) ]
+    | Fingerprint.Prime_down { par; prime1; prime2 } ->
+        let par = `List (List.map par ~f:(fun x -> `Int x)) in
+        let prime1 = `List (List.map prime1 ~f:(fun x -> `Int x)) in
+        let prime2 = `List (List.map prime2 ~f:(fun x -> `Int x)) in
+        `Assoc [ ("par", par); ("prime1", prime1); ("prime2", prime2) ]
+    | Fingerprint.Simplify -> `Assoc []
+  in
+  `Assoc [ ("type", `String rule_type); ("data", data) ]
+
+let serialize_fingerprint (proof : Fingerprint.proof) =
+  let initial = serialize_ltree proof.initial in
+  let steps = List.map proof.steps ~f:serialize_rule in
+  `Assoc [ ("initial", initial); ("steps", `List steps) ]
 
 let read_file_as_fingerprints filepath =
   let s = Stdio.In_channel.read_all filepath in

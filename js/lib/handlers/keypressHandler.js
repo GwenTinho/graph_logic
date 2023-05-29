@@ -5,8 +5,7 @@ function handleKeyPress(cy, mousePosition, tree, evt) {
 
     if (evt.key == "Backspace") {
         const id = cy.elements(':selected').id();
-        const removed = cy.elements(':selected').remove();
-        cy.changes.push(["remove", removed]);
+        cy.elements(':selected').remove();
         tree.dropNode(id);
         tree.render(cy);
         return;

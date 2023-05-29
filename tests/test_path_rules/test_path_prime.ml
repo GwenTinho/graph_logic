@@ -9,4 +9,4 @@ let%test "prime_path_test_1" =
   let pPar = [ 0 ] in
   let p1 = [ 0; 0 ] in
   let p2 = [ 0; 1 ] in
-  PathRules.prime_down_paths tree pPar p1 p2 <> None
+  Rules.prime_down tree pPar p1 p2 <> None

@@ -17,4 +17,8 @@ let _ =
          isPrimeIdGraph ~directed graph
 
        method simplify = simplify ()
+       method autoAI = auto_ai ()
+       method autoPrime = auto_prime ()
+       method autoSwitch = auto_switch ()
+       method verify proof = verify proof
     end)

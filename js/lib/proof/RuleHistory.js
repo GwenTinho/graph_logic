@@ -1,48 +1,99 @@
+import Tree from "../tree/Tree.js";
+
 class RuleHistory {
     constructor() {
         this.history = [];
+        this.initial = undefined;
     }
 
-    add(rule, id) {
-        this.history.push({
-            rule,
-            id
-        });
+    add(rule) {
+        switch (rule.name) {
+            case "ai":
+                this.history.push({
+                    type: rule.name,
+                    data: {
+                        par: rule.givenPaths[0],
+                        atom1: rule.givenPaths[1],
+                        atom2: rule.givenPaths[2]
+                    }
+                });
+                break;
+            case "pp":
+                this.history.push({
+                    type: rule.name,
+                    data: {
+                        par: rule.givenPaths[0],
+                        prime1: rule.givenPaths[1],
+                        prime2: rule.givenPaths[2]
+                    }
+                });
+                break;
+            case "sw":
+                this.history.push({
+                    type: rule.name,
+                    data: {
+                        par: rule.givenPaths[0],
+                        outside: rule.givenPaths[1],
+                        prime: rule.givenPaths[2],
+                        inside: rule.givenPaths[3]
+                    }
+                });
+                break;
+            case "simplify":
+                this.history.push({
+                    type: rule.name,
+                    data: {
+                    }
+                });
+                break;
+            default:
+                throw new Error("Unknown rule name: " + rule.name);
+        }
+
     }
 
-    addSimplification() {
-        this.history.push({
-            rule: "Simplification",
-            id: "Simplification"
-        });
+    serialize() {
+        return {
+            initial: this.initial,
+            steps: this.history
+        }
     }
 
-    getHistory() {
-        return this.history;
+    concat(initial, steps) {
+        if (this.history.length === 0) {
+            this.initial = initial;
+        }
+        this.history = this.history.concat(steps);
+    }
+
+    fromJSON(dataString) {
+        const { initial, steps } = JSON.parse(dataString);
+        this.history = steps;
+        this.initial = initial;
+        window.tree = Tree.deserialize(initial);
     }
 
     render() {
         const table = document.getElementById("history-body");
         table.innerHTML = "";
-        for (const { rule, id } of this.history) {
+        for (const { type, data } of this.history) {
             const tr = document.createElement("tr");
-            tr.appendChild(document.createTextNode(rule));
-            // add an id into the table for now
-            // but put it into the id column
-            const td = document.createElement("td");
-            // on show a small part of the id for now
-            td.appendChild(document.createTextNode(id.slice(0, 5)));
-            tr.appendChild(td);
+            tr.appendChild(document.createTextNode(type));
 
-
-
+            // TODO we dont consider the data yet
 
             table.appendChild(tr);
         }
     }
 
+    verify() {
+        // TODO
+    }
+
     clear() {
         this.history = [];
+        this.initial = undefined;
+
     }
 }
 

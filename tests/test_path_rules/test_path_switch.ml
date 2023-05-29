@@ -10,5 +10,5 @@ let%test "switch_path_test_1" =
   let pOut = [ 0; 0 ] in
   let pPrime = [ 0; 2 ] in
   let pPrimeIn = [ 0; 2; 0 ] in
-  let res = PathRules.switch_par tree pPar pOut pPrime pPrimeIn in
+  let res = Rules.switch_par tree pPar pOut pPrime pPrimeIn in
   match res with None -> false | Some _ -> true

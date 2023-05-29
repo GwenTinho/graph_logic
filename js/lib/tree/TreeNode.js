@@ -147,7 +147,6 @@ class TreeNode {
         }
 
         const added = cy.add(to_add);
-        cy.changes.push(["add", added]);
         return added;
     }
 }

@@ -17,3 +17,5 @@ val read_file_as_fingerprints : string -> Fingerprint.proof list
 val write_tree : LogicalTree.ltree -> string -> unit
 val write_id_graph : Idgraph.id_graph -> string -> unit
 val parse_tree : Yojson.Basic.t -> LogicalTree.ltree
+val serialize_rule : Fingerprint.rule_id -> Yojson.Basic.t
+val serialize_fingerprint : Fingerprint.proof -> Yojson.Basic.t

@@ -32,7 +32,6 @@ class PrimeNode extends TreeNode {
         }
 
         const added = cy.add(to_add);
-        cy.changes.push(["add", added]);
         added.addClass('compoundOut');
         return added;
 

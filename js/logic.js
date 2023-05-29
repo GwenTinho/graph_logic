@@ -1,11 +1,10 @@
 import { handleClick } from "./lib/handlers/clickHandler.js";
-import { cleanLayout, clearGraph, duplicateHandler, exportTree, undo } from "./lib/util/helper.js";
+import { cleanLayout, duplicateHandler, exportProof, exportTree, handleClear, undo } from "./lib/util/helper.js";
 import { handleKeyPress } from "./lib/handlers/keypressHandler.js";
-import { handleAi, handlePrime, handleRuleClick, handleSPar, handleSimplify } from "./lib/handlers/ruleHandlers.js";
+import { handleAi, handleAutoAi, handleAutoPrime, handleAutoSPar, handlePrime, handleRuleClick, handleSPar, handleSimplify } from "./lib/handlers/ruleHandlers.js";
 import { style } from "./lib/util/style.js";
 import Tree from "./lib/tree/Tree.js";
 import RuleHistory from "./lib/proof/RuleHistory.js";
-
 
 // Initialise global variables
 
@@ -19,8 +18,6 @@ window.cy = cytoscape({
 });
 
 window.directed = false;
-
-cy.changes = [];
 
 window.mousePosition = { x: 0, y: 0 };
 
@@ -45,6 +42,37 @@ document.addEventListener("DOMContentLoaded", event => {
             console.error(err);
         }
     });
+
+    document.getElementById('upload-proof').addEventListener('change', async evt => {
+        try {
+            let content = await evt?.target?.files[0]?.text();
+            ruleHistory.fromJson(content);
+            window.tree.render(cy);
+            window.ruleHistory.render();
+            cleanLayout(cy);
+        }
+        catch (err) {
+            console.error(err);
+        }
+    });
+});
+
+// Toggle the dropdown menu
+document.querySelector(".dropbtn").addEventListener("click", function () {
+    document.querySelector(".dropdown-content").classList.toggle("show");
+});
+
+// Close the dropdown menu if the user clicks outside of it
+window.addEventListener("click", function (event) {
+    if (!event.target.matches(".dropbtn")) {
+        const dropdowns = document.querySelectorAll(".dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            const dropdown = dropdowns[i];
+            if (dropdown.classList.contains("show")) {
+                dropdown.classList.remove("show");
+            }
+        }
+    }
 });
 
 
@@ -57,6 +85,12 @@ cy_div.addEventListener("mouseover", evt => {
 });
 
 document.addEventListener('keydown', evt => {
+
+    if (evt.key == "Delete") {
+        evt.preventDefault();
+        handleClear();
+        return;
+    }
 
     if (evt.ctrlKey && evt.key == "z") {
         evt.preventDefault();
@@ -81,6 +115,8 @@ document.addEventListener('keydown', evt => {
         document.getElementById('upload').click();
         return;
     }
+
+
 });
 
 
@@ -97,17 +133,22 @@ document.addEventListener('keyup', evt => {
     handleKeyPress(cy, mousePosition, tree, evt);
 });
 
-document.getElementById("download").addEventListener("click", evt => exportTree(tree));
-document.getElementById("undo").addEventListener("click", evt => undo(cy));
-document.getElementById("clear").addEventListener("click", evt => {
-    clearGraph(cy);
-    window.applyingRule = false;
-    window.rule = null;
-    window.tree = new Tree();
-    document.getElementById("selected-node-header").innerHTML = "";
-    window.ruleHistory.clear();
-    window.ruleHistory.render();
+document.getElementById("download").addEventListener("click", evt => exportTree());
+document.getElementById("export-proof").addEventListener("click", evt => exportProof());
+document.getElementById("import-proof").addEventListener("click", evt => {
+    document.getElementById('upload-proof').click();
 });
+document.getElementById("verify").addEventListener("click", evt => {
+    const verifies = ruleHistory.verify();
+    if (verifies) {
+        alert("The proof is correct!");
+    }
+    else {
+        alert("The proof is incorrect!");
+    }
+});
+document.getElementById("undo").addEventListener("click", evt => undo(cy));
+document.getElementById("clear").addEventListener("click", evt => handleClear());
 document.getElementById("center").addEventListener("click", evt => cleanLayout(cy));
 document.getElementById("import").addEventListener("click", evt => {
     document.getElementById('upload').click();
@@ -121,6 +162,9 @@ document.getElementById("simplify").addEventListener("click", evt => handleSimpl
 document.getElementById("ai").addEventListener("click", evt => handleAi(tree));
 document.getElementById("spar").addEventListener("click", evt => handleSPar(tree));
 document.getElementById("prime").addEventListener("click", evt => handlePrime(tree));
+document.getElementById("auto-ai").addEventListener("click", evt => handleAutoAi(tree));
+document.getElementById("auto-spar").addEventListener("click", evt => handleAutoSPar(tree));
+document.getElementById("auto-prime").addEventListener("click", evt => handleAutoPrime(tree));
 
 // CY EVENTS
 
