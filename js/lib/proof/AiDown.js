@@ -10,7 +10,8 @@ class AiDown extends Rule {
         if (this.neededPaths.length === 0) {
             const newTreeString = ai(...this.givenPaths);
             if (newTreeString === undefined) {
-                throw new Error("ai returned undefined");
+                console.log("ai didn't apply");
+                return window.tree;
             }
             return Tree.deserialize(JSON.parse(newTreeString));
         }

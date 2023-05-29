@@ -10,7 +10,8 @@ class SwitchPar extends Rule {
         if (this.neededPaths.length === 0) {
             const newTreeString = switchPar(...this.givenPaths);
             if (newTreeString === undefined) {
-                throw new Error("switchPar returned undefined");
+                console.log("switch didn't apply");
+                return window.tree;
             }
             return Tree.deserialize(JSON.parse(newTreeString));
         }

@@ -7,10 +7,6 @@ class RuleHistory {
     }
 
     add(rule) {
-        if (this.history.length === 0) {
-            this.initial = window.tree.serialize();
-        }
-
         switch (rule.name) {
             case "ai":
                 this.history.push({

@@ -65,6 +65,9 @@ function handleRuleClick(cy, evt) {
         }, 200);
 
         if (!gotNextRule) {
+            if (ruleHistory.initial === undefined) {
+                ruleHistory.initial = window.tree.serialize();
+            }
             window.tree = rule.applyRule();
 
             window.tree.render(cy);
