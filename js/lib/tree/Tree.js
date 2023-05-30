@@ -152,8 +152,6 @@ class Tree {
         for (const root of this.roots) {
             root.render(cy);
         }
-
-        cleanLayout(cy);
     }
 
     isConnected() {

@@ -27,6 +27,18 @@ function exportTree() {
     document.body.removeChild(a);
 }
 
+function updateProofMode(isProofMode) {
+    const proofModeIcon = document.getElementById('proof-mode-icon');
+
+    if (isProofMode) {
+        proofModeIcon.classList.remove('ph-lock-simple-open');
+        proofModeIcon.classList.add('ph-lock-simple'); // replace with your 'proof mode on' icon
+    } else {
+        proofModeIcon.classList.remove('ph-lock-simple');
+        proofModeIcon.classList.add('ph-lock-simple-open'); // replace with your 'proof mode off' icon
+    }
+}
+
 function exportProof() {
     if (!window.tree.isConnected() || !window.tree.isAllPrime()) return;
     const a = document.createElement("a");
@@ -77,4 +89,4 @@ function handleClear() {
 }
 
 
-export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel, duplicateHandler, exportProof, handleClear };
+export { undo, cleanLayout, clearGraph, exportTree, isAlphaNumeric, isValidLabel, duplicateHandler, exportProof, handleClear, updateProofMode };

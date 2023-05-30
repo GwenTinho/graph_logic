@@ -31,6 +31,7 @@ class Auto {
         window.ruleHistory.concat(initial, steps);
         window.tree.render(window.cy);
         window.ruleHistory.render();
+        cleanLayout(window.cy);
     }
 
     pp() {
@@ -59,6 +60,7 @@ class Auto {
         window.ruleHistory.concat(initial, steps);
         window.tree.render(window.cy);
         window.ruleHistory.render();
+        cleanLayout(window.cy);
     }
 
     sw() {
@@ -87,6 +89,7 @@ class Auto {
         window.ruleHistory.concat(initial, steps);
         window.tree.render(window.cy);
         window.ruleHistory.render();
+        cleanLayout(window.cy);
     }
 }
 
