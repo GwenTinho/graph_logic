@@ -7,11 +7,20 @@
 }
 
 .cygs {
-    height: 100vh;
+    height: 80vh;
     width: 70vw;
     position: relative;
     background-color: lightgrey;
-    border-radius: 15px;
+    margin-top: 0;
+    /* Remove gap */
+}
+
+#proof-mode-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #fff;
 }
 
 
@@ -21,8 +30,7 @@
     justify-content: space-around;
 }
 
-.styled-link {
-    display: inline-block;
+.styled-link-og {
     padding: 10px 20px;
     background-color: #1095c1;
     color: #fff;
@@ -31,14 +39,13 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    position: absolute;
-    top: 10px;
-    left: 10px;
 }
 
-.styled-link:hover {
+.styled-link-og:hover {
     background-color: #1ab3e6;
 }
+
+
 
 .row {
     display: flex;
@@ -70,94 +77,160 @@
     flex-direction: row;
 }
 
-button {
-    padding-right: 0px;
-    padding-left: 0px;
-    margin-top: 20px;
-}
-
 .grid {
     align-items: flex-start;
     /* Change to align items to the top */
-    margin-top: 10px;
+    margin-top: 00px;
     /* Adjust the top margin to bring the buttons closer to the top */
 }
 
 .rule-history {
     /* ...existing rule-history styles... */
-    margin-top: 0;
+    margin-top: 10px;
     margin-left: 10px;
+    width: 100%;
+    /* Increase width percentage as needed */
+    flex: 1 1 auto;
+    /* New property */
 }
 
 #history-table {
     width: 100%;
-    border-collapse: collapse;
 }
 
-#history-table {
+
+
+#history-table tr {
+    padding: 8px 10px;
     width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    /* Add border-radius property */
+    color: #fff;
 }
-
 
 #history-table td {
-    padding: 8px;
+    padding: 10px;
+    width: 100%;
 }
 
 
 
 #history-body tr:nth-child(even) {
-    background-color: #1186c9;
+    background-color: #424242;
     /* Update to a slightly deeper blue color */
 }
 
 #history-body tr:nth-child(odd) {
-    background-color: #1095c1;
+    background-color: #a5a5a5;
     /* Update to a lighter blue color */
 }
 
-#history-body tr:nth-child(even) td:nth-child(2) {
-    background-color: #1186c9;
+
+.toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #4f4f4f;
+    border: 1px solid #4f4f4f;
+    margin: 0;
+    padding: 0.1rem 10px;
+    /* Adjust the padding to reduce thickness */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* Distribute toolbar contents */
+    height: 50px;
+    /* Add specific height */
+    line-height: 30px;
+    /* Align elements to the center of the bar */
 }
 
-#history-body tr:nth-child(odd) td:nth-child(2) {
-    background-color: #1095c1;
-    /* Use the same background color as the corresponding row */
+.toolbar .group {
+    border-right: 1px solid #a5a5a5;
+    margin-right: 4px;
+    display: flex;
+    align-items: flex-start;
+    text-shadow: 1px 1px 2px black;
+    /* Use Flexbox */
 }
 
-#history-body .history-row td {
-    padding: 8px;
-    background-color: #fff;
-    color: #000;
-}
-
-#history-table th {
-    background-color: #1095c1;
-    text-align: left;
+.toolbar button {
+    background: transparent;
+    border: none;
     color: #fff;
-    /* Add text color */
-    padding: 10px;
-    /* Increase padding for better readability */
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
 }
 
-#history-table th:first-child {
-    border-top-left-radius: 10px;
-    /* Add border-radius to the top left corner */
+.toolbar button:hover,
+.toolbar button.active {
+    background: #424242;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #5c5c5c inset;
+    outline: 0px;
 }
 
-#history-table th:last-child {
-    border-top-right-radius: 10px;
-    /* Add border-radius to the top right corner */
+.styled-link {
+    padding: 5px 10px;
+    background-color: #4f4f4f;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.styled-link:hover {
+    background: #424242;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #5c5c5c inset;
+    outline: 0px;
+}
+
+.toolbar button:focus {
+    outline: none;
+}
+
+
+.vertical-toolbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    /* This will make the toolbar take up the full height of its container */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #4f4f4f;
+    border: 1px solid #4f4f4f;
+    border-radius: 5px 10px 0 0;
+    margin: 0;
+    padding: 0.1rem 10px;
+}
+
+.vertical-toolbar button {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.vertical-toolbar button :hover,
+.vertical-toolbar button.active {
+    background: #424242;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #5c5c5c inset;
+    outline: 0px;
 }
 
 #selected-node {
     position: relative;
     width: 100px;
     height: 100px;
-    border-radius: 20%;
-    background-color: lightblue;
+    border-radius: 5%;
+    background-color: #fff;
     margin: 20px auto;
 }
 
@@ -188,56 +261,4 @@ button {
     background-color: #4caf50;
     /*force overwrite the previous color and then reset */
     color: #fff;
-}
-
-
-
-.rule-selection button {
-    padding: 20px 10px;
-    /* Adjust the padding to make the buttons smaller */
-    font-size: 14px;
-    /* Adjust the font size as needed */
-    width: 100px;
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
-    margin-right: 10px;
-    position: absolute;
-    top: 0%;
-    right: 0%;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 0%;
-    right: 100%;
-    background-color: #1095c1;
-    min-width: 160px;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.dropdown-content.show {
-    display: block;
-}
-
-.dropdown-content button {
-    display: block;
-    padding: 10px 20px;
-    background-color: #1095c1;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.dropdown-content button:hover {
-    background-color: #1186c9;
 }
