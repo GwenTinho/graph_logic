@@ -1,0 +1,87 @@
+{
+    "connective": "par",
+    "successors": [
+        {
+            "connective": "par",
+            "successors": [
+                {
+                    "connective": "tensor",
+                    "successors": [
+                        {
+                            "connective": "par",
+                            "successors": [
+                                {
+                                    "connective": "atom",
+                                    "label": "a",
+                                    "polarisation": false
+                                },
+                                {
+                                    "connective": "atom",
+                                    "label": "b",
+                                    "polarisation": false
+                                }
+                            ]
+                        },
+                        {
+                            "connective": "atom",
+                            "label": "d",
+                            "polarisation": false
+                        }
+                    ]
+                },
+                {
+                    "connective": "atom",
+                    "label": "c",
+                    "polarisation": false
+                }
+            ]
+        },
+        {
+            "connective": "prime",
+            "graph": {
+                "nodes": [
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2
+                    },
+                    {
+                        "source": 2,
+                        "target": 3
+                    },
+                    {
+                        "source": 3,
+                        "target": 4
+                    }
+                ]
+            },
+            "successors": [
+                {
+                    "connective": "atom",
+                    "label": "a",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "b",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "c",
+                    "polarisation": true
+                },
+                {
+                    "connective": "atom",
+                    "label": "d",
+                    "polarisation": true
+                }
+            ]
+        }
+    ]
+}
