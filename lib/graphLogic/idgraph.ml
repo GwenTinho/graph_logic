@@ -146,3 +146,67 @@ let id_graph_complement g =
 let is_dual g1 g2 = is_iso (id_graph_complement g2) g1
 
 (*TODO write tests for this*)
+
+let is_prime idg =
+  let { nodes; edges } = idg in
+  let node_list =
+    List.map nodes ~f:(fun id ->
+        let atom =
+          Quartic.Graph.Atom { Quartic.Graph.label = ""; pol = true }
+        in
+        { Quartic.Graph.connective = atom; id })
+  in
+  let edge_list =
+    List.map edges ~f:(fun (s, t) ->
+        let source = List.find_exn node_list ~f:(fun v -> v.id = s) in
+        let target = List.find_exn node_list ~f:(fun v -> v.id = t) in
+        (source, target))
+  in
+  let graph, _ = Quartic.Graph.to_graph node_list edge_list in
+  Quartic.Condense.isPrime graph
+
+let successors node idg =
+  let { nodes = _; edges } = idg in
+  List.map ~f:(fun (_, v) -> v) (List.filter ~f:(fun (u, _) -> node = u) edges)
+
+let dfs start idg =
+  let rec rdfs visited node =
+    if not (List.mem visited node ~equal:( = )) then
+      let s = successors node idg in
+      List.fold_left ~f:rdfs ~init:(node :: visited) s
+    else visited
+  in
+  rdfs [] start
+
+let restrict idg nodes =
+  let { nodes = _; edges = e } = idg in
+  let edges =
+    List.filter
+      ~f:(fun (u, v) ->
+        List.mem nodes u ~equal:( = ) && List.mem nodes v ~equal:( = ))
+      e
+  in
+  { nodes; edges }
+
+let restrict_complement idg nodes =
+  let { nodes = n; edges = e } = idg in
+  let edges =
+    List.filter
+      ~f:(fun (u, v) ->
+        not (List.mem nodes u ~equal:( = ) && List.mem nodes v ~equal:( = )))
+      e
+  in
+  let nodes = List.filter ~f:(fun x -> not (List.mem nodes x ~equal:( = ))) n in
+  { nodes; edges }
+
+let connected_components idg =
+  let rec aux components graph =
+    match graph.nodes with
+    | [] -> components
+    | h :: _ ->
+        let component = dfs h graph in
+        let component_graph = restrict graph component in
+        let component_complement = restrict_complement graph component in
+        aux (component_graph :: components) component_complement
+  in
+  aux [] idg
