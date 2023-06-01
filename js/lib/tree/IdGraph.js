@@ -21,6 +21,17 @@ class IdGraph {
         //this.adjacency[id2].push(id1); undirected edges
     }
 
+    dropNode(id) {
+        delete this.nodes[id];
+        delete this.adjacency[id];
+        for (const id2 in this.adjacency) {
+            const index = this.adjacency[id2].indexOf(parseInt(id));
+            if (index > -1) {
+                this.adjacency[id2].splice(index, 1);
+            }
+        }
+    }
+
     duplicate(newParentId) {
         const graph = new IdGraph(newParentId);
         for (const id in this.nodes) {
@@ -39,7 +50,7 @@ class IdGraph {
     isValid() {
         // check if graph is a prime graph
 
-        return isPrime(this.serialize());
+        return isPrimeGS(this.serialize());
     }
 
     render(cy) {

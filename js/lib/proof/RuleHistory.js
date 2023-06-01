@@ -87,7 +87,10 @@ class RuleHistory {
     }
 
     verify() {
-        // TODO
+        if (this.initial === undefined) {
+            return;
+        }
+        return verify(JSON.stringify(ruleHistory.serialize()))
     }
 
     clear() {

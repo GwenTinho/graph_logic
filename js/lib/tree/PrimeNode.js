@@ -9,7 +9,7 @@ class PrimeNode extends TreeNode {
 
     addChild(node) {
         const { x, y, id } = node.nodeData;
-        this.nodeData.graph.addNode(x, y, id);
+        this.nodeData.graph.addNode(x, y + 100, id);
         node.nodeData.isRoot = false;
         this.successors.push(node); // might be problematic for orderings
         return true;
@@ -35,6 +35,18 @@ class PrimeNode extends TreeNode {
         added.addClass('compoundOut');
         return added;
 
+    }
+
+    dropNode(id) {
+        for (let index = 0; index < this.successors.length; index++) {
+            const successor = this.successors[index];
+            if (successor.nodeData.id == id) {
+                this.successors.splice(index, 1);
+                this.nodeData.graph.dropNode(id);
+                return;
+            }
+            successor.dropNode(id);
+        }
     }
 
 }
