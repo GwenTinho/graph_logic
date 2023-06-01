@@ -249,7 +249,7 @@
     margin: 0;
     padding: 0;
     font-size: 16px;
-    color: #fff;
+    color: black;
 }
 
 #selected-node-content p {
@@ -263,5 +263,5 @@
 #selected-node.success {
     background-color: #4caf50;
     /*force overwrite the previous color and then reset */
-    color: #fff;
+    color: black;
 }

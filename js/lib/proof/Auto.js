@@ -1,4 +1,5 @@
 import Tree from "../tree/Tree.js";
+import { cleanLayout } from "../util/helper.js";
 
 class Auto {
     constructor() {
