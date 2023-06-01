@@ -1,0 +1,218 @@
+{
+    "initial": {
+        "successors": [
+            {
+                "successors": [
+                    {
+                        "label": "c",
+                        "polarisation": false,
+                        "connective": "atom"
+                    },
+                    {
+                        "label": "d",
+                        "polarisation": false,
+                        "connective": "atom"
+                    }
+                ],
+                "connective": "par"
+            },
+            {
+                "successors": [
+                    {
+                        "label": "b",
+                        "polarisation": true,
+                        "connective": "atom"
+                    },
+                    {
+                        "label": "b",
+                        "polarisation": false,
+                        "connective": "atom"
+                    }
+                ],
+                "connective": "par"
+            },
+            {
+                "label": "c",
+                "polarisation": true,
+                "connective": "atom"
+            },
+            {
+                "label": "d",
+                "polarisation": true,
+                "connective": "atom"
+            }
+        ],
+        "graph": {
+            "nodes": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "edges": [
+                {
+                    "source": 1,
+                    "target": 2
+                },
+                {
+                    "source": 2,
+                    "target": 3
+                },
+                {
+                    "source": 3,
+                    "target": 4
+                }
+            ]
+        },
+        "connective": "prime"
+    },
+    "steps": [
+        {
+            "type": "ai",
+            "data": {
+                "par": [
+                    0,
+                    1
+                ],
+                "atom1": [
+                    0,
+                    1,
+                    0
+                ],
+                "atom2": [
+                    0,
+                    1,
+                    1
+                ]
+            }
+        },
+        {
+            "type": "simplify",
+            "data": {}
+        },
+        {
+            "type": "sw",
+            "data": {
+                "par": [
+                    0
+                ],
+                "outside": [
+                    0,
+                    0
+                ],
+                "prime": [
+                    0,
+                    0,
+                    1
+                ],
+                "inside": [
+                    0,
+                    1
+                ]
+            }
+        },
+        {
+            "type": "sw",
+            "data": {
+                "par": [
+                    0
+                ],
+                "outside": [
+                    0,
+                    0
+                ],
+                "prime": [
+                    0,
+                    1
+                ],
+                "inside": [
+                    0,
+                    1,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "simplify",
+            "data": {}
+        },
+        {
+            "type": "sw",
+            "data": {
+                "par": [
+                    0,
+                    0
+                ],
+                "outside": [
+                    0,
+                    0,
+                    1
+                ],
+                "prime": [
+                    0,
+                    0,
+                    0
+                ],
+                "inside": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "par": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "atom1": [
+                    0,
+                    0,
+                    0,
+                    1,
+                    1
+                ],
+                "atom2": [
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "simplify",
+            "data": {}
+        },
+        {
+            "type": "simplify",
+            "data": {}
+        },
+        {
+            "type": "ai",
+            "data": {
+                "par": [
+                    0
+                ],
+                "atom1": [
+                    0,
+                    0
+                ],
+                "atom2": [
+                    0,
+                    1
+                ]
+            }
+        },
+        {
+            "type": "simplify",
+            "data": {}
+        }
+    ]
+}
