@@ -32,12 +32,9 @@ let find_some_and_apply_index tree f =
   let x = List.find_mapi (successors tree) ~f in
   x
 
-let idl x : int list = x
-let id x : ltree = x
-
 let apply_ai_once pathPar path1 path2 tree =
   let rec aux pathPar path1 path2 current =
-    let current = id current in
+    let current = current in
     match current with
     | Par nodes -> (
         match find_atomic_dual_pair_index nodes with
