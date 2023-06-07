@@ -109,6 +109,10 @@ function handlePrime(tree) {
 
 function handleSimplify(tree) {
     if (!isValid(tree)) return;
+
+    if (ruleHistory.initial === undefined) {
+        ruleHistory.initial = window.tree.serialize();
+    }
     applyingRule = true;
     updateProofMode(true);
     rule = new Simplify();
