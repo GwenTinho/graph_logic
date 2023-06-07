@@ -56,6 +56,11 @@ let ltree_of_graph (graph : Graph.graph) =
   | None -> None
   | Some md_tree -> Some (ltree_of_mdtree md_tree)
 
+let regenerate ltree =
+  let mdtree = mdtree_of_ltree ltree in
+  let graph = Tree.tree_to_graph mdtree in
+  ltree_of_graph graph
+
 let combineConnectives tree =
   (*Idea: if a par has par subnodes, combine those subnodes into the highest par*)
   let rec aux tree =
@@ -162,6 +167,13 @@ let traverse_by_path tree path =
   in
   aux tree path
 
+let mapi_successors tree ~f =
+  match tree with
+  | Atom _ -> tree
+  | Tensor tl -> Tensor (List.mapi ~f tl)
+  | Par tl -> Par (List.mapi ~f tl)
+  | Prime (g, tl) -> Prime (g, List.mapi ~f tl)
+
 let map_at_path tree path ~f =
   let* path_part_from_head = Base.List.tl path in
   let rec aux tree path =
@@ -173,22 +185,8 @@ let map_at_path tree path ~f =
         let updated_tree =
           match tree with
           | Atom _ -> new_tree
-          | Tensor tl ->
-              Tensor
-                (Base.List.mapi
-                   ~f:(fun i t -> if i = h then new_tree else t)
-                   tl)
-          | Par tl ->
-              Par
-                (Base.List.mapi
-                   ~f:(fun i t -> if i = h then new_tree else t)
-                   tl)
-          | Prime (g, tl) ->
-              Prime
-                ( g,
-                  Base.List.mapi
-                    ~f:(fun i t -> if i = h then new_tree else t)
-                    tl )
+          | _ ->
+              mapi_successors tree ~f:(fun i t -> if i = h then new_tree else t)
         in
         Some updated_tree
   in

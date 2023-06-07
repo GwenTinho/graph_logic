@@ -16,3 +16,5 @@ val hash_tree : ltree -> int
 val successors : ltree -> ltree list
 val traverse_by_path : ltree -> int list -> ltree option
 val map_at_path : ltree -> int list -> f:(ltree -> ltree option) -> ltree option
+val mapi_successors : ltree -> f:(int -> ltree -> ltree) -> ltree
+val regenerate : ltree -> ltree option
