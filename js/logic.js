@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", event => {
     document.getElementById('upload-proof').addEventListener('change', async evt => {
         try {
             let content = await evt?.target?.files[0]?.text();
-            ruleHistory.fromJson(content);
+            ruleHistory.fromJSON(content);
             window.tree.render(cy);
             window.ruleHistory.render();
             cleanLayout(cy);
