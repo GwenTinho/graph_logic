@@ -27,7 +27,8 @@ let isomorphism_pairing idg1 sub1 idg2 sub2 =
              let original_sub = List.nth_exn sub1 i in
              (original_sub, corresponding_sub)))
 
-let is_dual_atom (a : Quartic.Graph.atom) (b : Quartic.Graph.atom) = equal_bool a.pol (not b.pol) && equal_string  a.label b.label
+let is_dual_atom (a : Quartic.Graph.atom) (b : Quartic.Graph.atom) =
+  equal_bool a.pol (not b.pol) && equal_string a.label b.label
 
 (*Rethink this*)
 let rec is_dual t1 t2 =
@@ -60,5 +61,4 @@ let rec is_dual t1 t2 =
 let equal_atom (a : Quartic.Graph.atom) (b : Quartic.Graph.atom) =
   equal_string a.label b.label && equal_bool a.pol b.pol
 
-let is_empty t =
-  match simplify t with None -> true | Some _ -> false
+let is_empty t = match regenerate t with None -> true | Some _ -> false

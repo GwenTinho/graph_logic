@@ -16,9 +16,14 @@ let _ =
          let directed = Js.Unsafe.js_expr "directed" |> Js.to_bool in
          isPrimeIdGraph ~directed graph
 
+       method isPrimeGS graph =
+         let directed = Js.Unsafe.js_expr "directed" |> Js.to_bool in
+         isPrimeIdGraphGS ~directed graph
+
        method simplify = simplify ()
        method autoAI = auto_ai ()
        method autoPrime = auto_prime ()
        method autoSwitch = auto_switch ()
        method verify proof = verify proof
+       method getTreeJson = getTreeJson ()
     end)

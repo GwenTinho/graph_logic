@@ -1,5 +1,5 @@
 import { handleClick } from "./lib/handlers/clickHandler.js";
-import { cleanLayout, duplicateHandler, exportProof, exportTree, handleClear, undo } from "./lib/util/helper.js";
+import { cleanLayout, duplicateHandler, exportProof, exportTree, handleClear, undo, updateProofMode } from "./lib/util/helper.js";
 import { handleKeyPress } from "./lib/handlers/keypressHandler.js";
 import { handleAi, handleAutoAi, handleAutoPrime, handleAutoSPar, handlePrime, handleRuleClick, handleSPar, handleSimplify } from "./lib/handlers/ruleHandlers.js";
 import { style } from "./lib/util/style.js";
@@ -25,6 +25,7 @@ window.isMouseOver = false;
 
 // global variables for rule application
 window.applyingRule = false;
+updateProofMode(false);
 window.rule = null;
 
 
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", event => {
     document.getElementById('upload-proof').addEventListener('change', async evt => {
         try {
             let content = await evt?.target?.files[0]?.text();
-            ruleHistory.fromJson(content);
+            ruleHistory.fromJSON(content);
             window.tree.render(cy);
             window.ruleHistory.render();
             cleanLayout(cy);
@@ -56,25 +57,6 @@ document.addEventListener("DOMContentLoaded", event => {
         }
     });
 });
-
-// Toggle the dropdown menu
-document.querySelector(".dropbtn").addEventListener("click", function () {
-    document.querySelector(".dropdown-content").classList.toggle("show");
-});
-
-// Close the dropdown menu if the user clicks outside of it
-window.addEventListener("click", function (event) {
-    if (!event.target.matches(".dropbtn")) {
-        const dropdowns = document.querySelectorAll(".dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-            const dropdown = dropdowns[i];
-            if (dropdown.classList.contains("show")) {
-                dropdown.classList.remove("show");
-            }
-        }
-    }
-});
-
 
 const cy_div = document.getElementById('cy');
 cy_div.addEventListener("mouseleave", evt => {

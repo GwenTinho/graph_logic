@@ -32,14 +32,41 @@
     </dialog>
     <script src="../js/dependencies/modal.js"></script>
 
+    <section class="container">
+        <hgroup style="text-align: center">
+            <div class="toolbar">
+                <div class="group">
+                    <a href="../index.html" class="styled-link"><i class="ph ph-house"></i></a>
+                    <a href="instructions.html" class="styled-link"><i class="ph ph-question"></i></a>
+                </div>
+                <div class="group">
+                    <div> Tree </div>
+                    <button type="button" id="clear"><i class="ph ph-broom"></i></button>
+                    <button type="button" id="center"><i class="ph ph-arrows-in-line-horizontal"></i></button>
+                    <button type="button" id="undo"><i class="ph ph-arrow-u-down-left"></i></button>
+                    <button type="button" id="duplicate"><i class="ph ph-copy-simple"></i></button>
+                    <button type="button" id="import"><i class="ph ph-upload-simple"></i></button>
+                    <input id="upload" type="file" style="display: none;" />
+                    <button type="button" id="download"><i class="ph ph-download-simple"></i></button>
+                </div>
+                <div class="group">
+                    <div> Proof </div>
+                    <button type="button" id="verify"> <i class="ph ph-seal-check"></i> </button>
+                    <button type="button" id="export-proof"> <i class="ph ph-download-simple"></i> </button>
+                    <button type="button" id="import-proof"> <i class="ph ph-upload-simple"></i> </button>
+                    <input id="upload-proof" type="file" style="display: none;" />
+                </div>
+            </div>
+        </hgroup>
+    </section>
+
     <section>
         <div id="layout">
             <div class="col">
-                <a href="../index.html" class="styled-link"><i class="ph ph-house"></i></a>
-                <a href="instructions.html" class="styled-link"><i class="ph ph-question"></i></a>
+
                 <div class="rule-history">
 
-                    <button type="button" id="verify"> <i class="ph ph-seal-check"></i> </button>
+
                     <h3><i class="ph ph-clock-counter-clockwise"></i></h3>
                     <table id="history-table">
                         <tbody id="history-body">
@@ -55,8 +82,10 @@
 
             <div class="col">
                 <div class="rule-selection">
-                    <h3>Rules</h3>
-                    <div class="col">
+
+                    <div class="vertical-toolbar">
+                        <div>Rules</div>
+                        <i id="proof-mode-icon" class="ph ph-lock-simple-open"></i>
                         <button type="button" id="ai">\(ai \downarrow\) </button>
                         <button type="button" id="spar">\(s_⅋\)</button>
                         <button type="button" id="prime">\(p \downarrow\)</button>
@@ -65,6 +94,7 @@
                         <button type="button" id="auto-spar">Auto \(s_⅋\)</button>
                         <button type="button" id="auto-prime">Auto \(p \downarrow\)</button>
                     </div>
+
                 </div>
                 <div class="node-selection">
                     <div class="col">
@@ -77,21 +107,6 @@
                 </div>
             </div>
 
-            <div class="dropdown">
-                <button class="dropbtn">Tools</button>
-                <div class="dropdown-content">
-                    <button type="button" id="import"><i class="ph ph-upload-simple"></i></button>
-                    <input id="upload" type="file" style="display: none;" />
-                    <button type="button" id="download"><i class="ph ph-download-simple"></i></button>
-                    <button type="button" id="export-proof"> <i class="ph ph-export"></i> </button>
-                    <button type="button" id="import-proof"> <i class="ph ph-arrow-square-in"></i> </button>
-                    <input id="upload-proof" type="file" style="display: none;" />
-                    <button type="button" id="clear"><i class="ph ph-broom"></i></button>
-                    <button type="button" id="center"><i class="ph ph-arrows-in-line-horizontal"></i></button>
-                    <button type="button" id="undo"><i class="ph ph-arrow-u-down-left"></i></button>
-                    <button type="button" id="duplicate"><i class="ph ph-copy-simple"></i></button>
-                </div>
-            </div>
 
         </div>
     </section>

@@ -25,7 +25,6 @@ let compare_paths_up_to_last (path1 : path) (path2 : path) =
     Some (last1, last2)
 
 let atomic_identity_down (tree : ltree) pathPar pathAtom1 pathAtom2 =
-  (*If the atom paths dont coincide up to the last node return none *)
   LogicalTree.map_at_path tree pathPar ~f:(function
     | Par nodes -> (
         let* idx1, idx2 = compare_paths_up_to_last pathAtom1 pathAtom2 in
@@ -73,32 +72,14 @@ let switch_par (tree : ltree) path_par path_outside path_prime
           let* index_in_prime = List.hd revSubnode in
           let new_prime =
             match prime with
-            | Prime (idg, succ) ->
-                let* inside = List.nth succ index_in_prime in
-                let combined = Par [ outside; inside ] in
-                let new_succ =
-                  List.mapi succ ~f:(fun i v ->
-                      if i <> index_in_prime then v else combined)
-                in
-                Some (Prime (idg, new_succ))
-            | Tensor succ ->
-                let* inside = List.nth succ index_in_prime in
-                let combined = Par [ outside; inside ] in
-                let new_succ =
-                  List.mapi succ ~f:(fun i v ->
-                      if i <> index_in_prime then v else combined)
-                in
-                Some (Tensor new_succ)
-            | Par succ ->
-                let* inside = List.nth succ index_in_prime in
-                let combined = Par [ outside; inside ] in
-                let new_succ =
-                  List.mapi succ ~f:(fun i v ->
-                      if i <> index_in_prime then v else combined)
-                in
-                Some (Par new_succ)
-            | _ -> None
+            | Atom _ -> None
+            | _ ->
+                Some
+                  (LogicalTree.mapi_successors prime ~f:(fun i inside ->
+                       let combined = Par [ outside; inside ] in
+                       if i <> index_in_prime then inside else combined))
           in
+
           let new_nodes =
             List.filter_mapi nodes ~f:(fun i v ->
                 match i with

@@ -1,4 +1,5 @@
 import Tree from "../tree/Tree.js";
+import { cleanLayout } from "../util/helper.js";
 
 class Auto {
     constructor() {
@@ -31,6 +32,7 @@ class Auto {
         window.ruleHistory.concat(initial, steps);
         window.tree.render(window.cy);
         window.ruleHistory.render();
+        cleanLayout(window.cy);
     }
 
     pp() {
@@ -59,6 +61,7 @@ class Auto {
         window.ruleHistory.concat(initial, steps);
         window.tree.render(window.cy);
         window.ruleHistory.render();
+        cleanLayout(window.cy);
     }
 
     sw() {
@@ -87,6 +90,7 @@ class Auto {
         window.ruleHistory.concat(initial, steps);
         window.tree.render(window.cy);
         window.ruleHistory.render();
+        cleanLayout(window.cy);
     }
 }
 

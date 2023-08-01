@@ -3,6 +3,7 @@ import Auto from "../proof/Auto.js";
 import PrimeDown from "../proof/PrimeDown.js";
 import Simplify from "../proof/Simplify.js";
 import SwitchPar from "../proof/SwitchPar.js";
+import { cleanLayout, updateProofMode } from "../util/helper.js";
 
 
 // check if tree is valid before a proof TODO
@@ -71,9 +72,11 @@ function handleRuleClick(cy, evt) {
             window.tree = rule.applyRule();
 
             window.tree.render(cy);
+            cleanLayout(cy);
             ruleHistory.add(rule);
             ruleHistory.render();
             applyingRule = false;
+            updateProofMode(false);
             rule = null;
             document.getElementById("selected-node-header").innerHTML = "";
         }
@@ -83,6 +86,7 @@ function handleRuleClick(cy, evt) {
 function handleAi(tree) {
     if (!isValid(tree)) return;
     applyingRule = true;
+    updateProofMode(true);
     rule = new AiDown();
     rule.nextRule();
 }
@@ -90,6 +94,7 @@ function handleAi(tree) {
 function handleSPar(tree) {
     if (!isValid(tree)) return;
     applyingRule = true;
+    updateProofMode(true);
     rule = new SwitchPar();
     rule.nextRule();
 }
@@ -97,18 +102,25 @@ function handleSPar(tree) {
 function handlePrime(tree) {
     if (!isValid(tree)) return;
     applyingRule = true;
+    updateProofMode(true);
     rule = new PrimeDown();
     rule.nextRule();
 }
 
 function handleSimplify(tree) {
     if (!isValid(tree)) return;
+
+    if (ruleHistory.initial === undefined) {
+        ruleHistory.initial = window.tree.serialize();
+    }
     applyingRule = true;
+    updateProofMode(true);
     rule = new Simplify();
     window.tree = rule.applyRule();
     ruleHistory.add(rule);
     ruleHistory.render();
     window.tree.render(cy);
+    cleanLayout(cy);
 }
 
 function handleAutoPrime() {

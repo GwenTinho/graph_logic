@@ -50,7 +50,6 @@ let get_layout cy root =
   in
   cy##layout options
 
-(* Take a js object of {nodes: int list, edges int list}*)
 let isPrimeIdGraph ?directed idGraph =
   let jsnode_list = idGraph##nodes |> Js.to_array |> Array.to_list in
   let jsedge_list = idGraph##edges |> Js.to_array |> Array.to_list in
@@ -75,6 +74,27 @@ let isPrimeIdGraph ?directed idGraph =
   in
   let graph, _ = Graph.to_graph ?directed node_list edge_list in
   Condense.isPrime graph
+
+(* Take a js object of {nodes: int list, edges int list} which are just in json format basically*)
+let isPrimeIdGraphGS ?directed idGraph =
+  let jsnode_list = idGraph##.nodes |> Js.to_array |> Array.to_list in
+  let jsedge_list = idGraph##.edges |> Js.to_array |> Array.to_list in
+  let node_list =
+    List.map jsnode_list ~f:(fun n ->
+        let id = Js.parseInt n in
+        let atom = Graph.Atom { Graph.label = ""; pol = true } in
+        { Graph.connective = atom; id })
+  in
+  let edge_list =
+    List.map jsedge_list ~f:(fun e ->
+        let source_id = e##.source |> Js.parseInt in
+        let target_id = e##.target |> Js.parseInt in
+        let source = List.find_exn node_list ~f:(fun v -> v.id = source_id) in
+        let target = List.find_exn node_list ~f:(fun v -> v.id = target_id) in
+        (source, target))
+  in
+  let graph, _ = Graph.to_graph ?directed node_list edge_list in
+  Condense.isPrime graph |> Js.bool
 
 let decompose () =
   let cy = Js.Unsafe.js_expr "cy1" in
@@ -154,6 +174,8 @@ let ai_down pathPar path1 path2 =
   | Some tree ->
       Js.Unsafe.inject
         (Parseproofs.serialize_ltree tree |> Yojson.Basic.to_string |> Js.string)
+
+let getTreeJson () = Js.Unsafe.global##.tree
 
 let prime_down pathPar path1 path2 =
   let tree =
