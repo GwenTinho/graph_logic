@@ -41,18 +41,18 @@ let atomic_identity_down (tree : ltree) pathPar pathAtom1 pathAtom2 =
 
 let prime_down (tree : ltree) pathPar pathPrime1 pathPrime2 : ltree option =
   LogicalTree.map_at_path tree pathPar ~f:(function
-    | Par nodes -> (
+    | Par nodes ->
         let* idx1, idx2 = compare_paths_up_to_last pathPrime1 pathPrime2 in
         let* prime1 = List.nth nodes idx1 in
         let* prime2 = List.nth nodes idx2 in
-        match (prime1, prime2) with
-        | Prime (idg1, succ1), Prime (idg2, succ2) ->
-            if Idgraph.is_iso idg1 idg2 then
+        if Equality.is_dual prime1 prime2 then
+          match (prime1, prime2) with
+          | Prime (_, succ1), Prime (_, succ2) ->
               Some
                 (Tensor
                    (Caml.List.map2 (fun t1 t2 -> Par [ t1; t2 ]) succ1 succ2))
-            else None
-        | _ -> None)
+          | _ -> None
+        else None
     | _ -> None)
 
 let switch_par (tree : ltree) path_par path_outside path_prime

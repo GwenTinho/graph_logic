@@ -27,6 +27,10 @@ let isomorphism_pairing idg1 sub1 idg2 sub2 =
              let original_sub = List.nth_exn sub1 i in
              (original_sub, corresponding_sub)))
 
+let dual_pairing idg1 sub1 idg2 sub2 =
+  let idg2_dual = Idgraph.id_graph_complement idg2 in
+  isomorphism_pairing idg1 sub1 idg2_dual sub2
+
 let is_dual_atom (a : Quartic.Graph.atom) (b : Quartic.Graph.atom) =
   equal_bool a.pol (not b.pol) && equal_string a.label b.label
 
@@ -40,7 +44,7 @@ let rec is_dual t1 t2 =
   | Some t1, Some t2 -> (
       match (t1, t2) with
       | Prime (idg1, sub1), Prime (idg2, sub2) -> (
-          match isomorphism_pairing idg1 sub1 idg2 sub2 with
+          match dual_pairing idg1 sub1 idg2 sub2 with
           | None -> false
           | Some l -> List.for_all l ~f:(fun (x, y) -> is_dual x y))
       | Atom a, Atom b -> is_dual_atom a b
